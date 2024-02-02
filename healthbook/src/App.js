@@ -5,6 +5,9 @@ import Navbar from './Pages/navbar'
 import Sidebar from './Pages/sidebar'
 import HomePage from './Pages/Home'
 import LoginPage from './Pages/Login'
+import ReportUpload1 from './Pages/ReportUpload1'
+import MyPrescriptions from './Pages/MyPrescriptions'
+import PrescriptionDetails from './Pages/Prescription'
 // import FindDoctor from './Pages/FindDoctor'
 // import HealthAnalysis from './Pages/HealthAnalysis'
 // import MyDoctors from './Pages/MyDoctors'
@@ -27,7 +30,7 @@ const App = () => {
     </nav>
 
     <div class="flex flex-wrap flex-row">
-    <div className="bg-black h-lvh w-1/6 top left-0">
+    <div className="h-lvh w-1/6 top left-0">
       <div className="p-4">
         <Sidebar/>
       </div>
@@ -37,6 +40,9 @@ const App = () => {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage />} />
+      <Route path="/reportupload1" element={<ReportUpload1 />} />
+      <Route path="/myprescriptions" element={<MyPrescriptions />} />
+      <Route path="/prescription/:id" element={<PrescriptionDetails />} />
       {/* <Route path="/FindDoctor" element={<FindDoctor />} />
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />
       <Route path="/MyDoctors" element={<MyDoctors />} />

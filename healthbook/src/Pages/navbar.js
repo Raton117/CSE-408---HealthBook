@@ -17,7 +17,7 @@ const Navbar = () => {
           
   
           <Link to="/" className="hover:text-black mr-8 text-2xl">Home</Link>
-          <Link to="/prescriptions" className="hover:text-black mr-8 text-2xl">Prescriptions</Link>
+          <Link to="/myprescriptions" className="hover:text-black mr-8 text-2xl">Prescriptions</Link>
           <Link to="/tests" className="hover:text-black mr-8 text-2xl">Tests</Link>
           <Link to="/currentMedication" className="hover:text-black text-2xl">Current Medication</Link>
           
@@ -27,7 +27,15 @@ const Navbar = () => {
           
 
           {isAuthenticated ? (
+            
             <div className="flex items-center space-x-4">
+              
+        <Link to="/reportupload1">
+          <button className="bg-myblue text-2xl font-poppins text-white  rounded-lg border-myblue border-spacing-2 hover:bg-white hover:text-myblue">
+            Add Report
+          </button>
+        </Link>
+      
               <Link to="/profile" className="bg-blue-500 text-2xl font-poppins text-white p-3 rounded-full hover:bg-blue-700">Profile</Link>
               <button className="hover:text-gray-300 text-2xl bg-red-400 p-3">Logout</button>
             </div>
