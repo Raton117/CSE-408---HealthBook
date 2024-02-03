@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 const SignupPage = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
@@ -14,18 +15,35 @@ const SignupPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // Implement your signup logic here
+    if (password !== confirmPassword) {
+      alert("Passwords do not match.");
+      return;
+    }
 
-    const response = await axios.post('YOUR_SIGNUP_ENDPOINT', {
-      username,
-      password,
-      name,
-      email,
-      phoneNumber,
-      dateOfBirth,
-    });
-    // On successful signup, redirect to login page:
-     navigate('/login');
+    try {
+      const response = await axios.post('http://localhost:8000/patients/signup', {
+        username: username,
+        password: password,
+        password_confirmation: confirmPassword,
+        name: name,
+        email: email,
+        phone_number: phoneNumber,
+        dob: dateOfBirth,
+      });
+      console.log(response.data);
+      
+      if (response.data.success) {
+        navigate('/login');
+      } else {
+        // unsuccessful signup, e.g., username already taken, etc.
+        alert("Signup was unsuccessful. Please try again.");
+      }
+    } catch (error) {
+      //  error, e.g., network error, server error, etc.
+      console.error("There was an error during signup:", error);
+      alert("An error occurred during signup. Please try again later.");
+    }
+  
   };
 
   return (
@@ -45,7 +63,16 @@ const SignupPage = () => {
             name="username"
           />
         </div>
-
+        <div className="mb-6">
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Full Name"
+            required
+            className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
+          />
+        </div>
         <div className="mb-6">
           <input
             type="password"
@@ -58,14 +85,15 @@ const SignupPage = () => {
         </div>
         <div className="mb-6">
           <input
-            type="text"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Full Name"
+            type="password"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            placeholder="Confirm Password"
             required
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
+        
 
         <div className="mb-6">
           <input
