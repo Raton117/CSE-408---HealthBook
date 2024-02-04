@@ -9,7 +9,8 @@ import MyDoctors from './Pages/MyDoctors'
 import FindDoctor from './Pages/FindDoctors'
 import DoctorProfile from './Pages/DoctorProfile'
 import Signup from './Pages/Signup'
-
+import ProfileViewPage from './Pages/ProfileView'
+import UpdateProfilePage from './Pages/updateprofile'
 // import HealthAnalysis from './Pages/HealthAnalysis'
 // import MyDoctors from './Pages/MyDoctors'
 // import Warnings from './Pages/Warnings'
@@ -56,6 +57,8 @@ const App = () => {
       <Route path="/doctorprofile" element={<DoctorProfile />}  />
       <Route path="/signup" element={<Signup />}  />
       <Route path="/PrescriptionRequest" element={<PrescriptionRequest />} />
+      <Route path="/profileviewpage" element={<ProfileViewPage />} />
+      <Route path="/updateprofile" element={<UpdateProfilePage />} />
       {/* } />
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />
       <Route path="/MyDoctors" element={<MyDoctors />} />

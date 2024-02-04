@@ -39,7 +39,7 @@ const Navbar = ({isAuthenticated,onLogout}) => {
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
               <Link
-                to="/profile"
+                to="/profileviewpage"
                 className="bg-blue-500 text-2xl font-poppins text-white p-3 rounded hover:bg-blue-700"
               >
                 Profile
