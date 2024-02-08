@@ -3,40 +3,51 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const ProfileViewPage = () => {
-  // Assuming you fetch the user's ID from somewhere, like context or a global state.
-  const userId = 'user123'; // Example user ID
-
-  const [userData, setUserData] = useState({
-    username: '',
-    name: '',
-    email: '',
-    phoneNumber: '',
-    dateOfBirth: '',
-    area: '',
-  });
-
+ 
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Fetch the user's details
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(`http://localhost:8000/patients/${userId}`);
-        const { username, name, email, phone_number, dob,area } = response.data;
-        setUserData({
-          username: username,
-          name: name,
-          email: email,
-          phoneNumber: phone_number,
-          dateOfBirth: dob,
-          area: area,
-        });
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-      }
-    };
-    fetchData();
-  }, [userId]);
+ 
+    const [userData, setUserData] = useState({
+      username: '',
+      name: '',
+      email: '',
+      phoneNumber: '',
+      dateOfBirth: '',
+      area: '',
+      password: '',
+    });
+  
+    useEffect(() => {
+      // Fetch the user's details
+      const fetchData = async () => {
+        try {
+          const profileuser = localStorage.getItem('patient_username');
+          const requestingUsername =profileuser; // 
+  
+          const response = await axios.get(`http://localhost:8000/patients/profile?username=${profileuser}&requesting_username=${requestingUsername}`);
+          console.log(response.data);
+          const { patient } = response.data;
+          const { username, password, name, email, phone_number, dob, area } = patient;
+          
+          //console.log(username);
+         // console.log(name);
+          
+          setUserData({
+            username: username,
+            name: name,
+            email: email,
+            phoneNumber: phone_number,
+            dateOfBirth: dob,
+            area: area,
+            password: password,
+          });
+        } catch (error) {
+          console.error("Error fetching user data:", error);
+        }
+      };
+  
+      fetchData();
+    }, []);
 
   return (
     <div className="flex flex-col items-center justify-center h-screen bg-transparent">
@@ -52,6 +63,9 @@ const ProfileViewPage = () => {
           <strong>Email:</strong> {userData.email}
         </div>
         <div className="mb-4">
+          <strong>Password:</strong> {userData.password}
+        </div>
+        <div className="mb-4">
           <strong>Phone Number:</strong> {userData.phoneNumber}
         </div>
         <div className="mb-4">
@@ -63,7 +77,7 @@ const ProfileViewPage = () => {
         <div className="flex justify-center mt-4">
           <button
             className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
-            onClick={() => navigate('/update-profile')} // Navigate to the update profile page
+            onClick={() => navigate('/updateprofile')} // Navigate to the update profile page
           >
             Update Profile
           </button>
