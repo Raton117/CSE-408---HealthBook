@@ -43,4 +43,7 @@ class DoctorSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
-#class DoctorLoginSerializer(serializers.ModelSerializer):
+class DegreeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Degree
+        fields = ('username', 'degree', 'speciality')

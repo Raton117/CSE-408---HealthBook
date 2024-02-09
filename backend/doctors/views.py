@@ -4,7 +4,7 @@ from .models import Hospital, Doctor, Clinic, Consultency, ConsultencyDay, Degre
 from treatments.models import Request
 from patients.models import Patient
 from treatments.serializers import RequestSerializer, TreatmentSerializer
-from .serializers import HospitalSerializer, DoctorSerializer
+from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer
 
 #Create your views here.
 
@@ -83,3 +83,33 @@ class DoctorLoginView(generics.GenericAPIView):
         else:
             return Response({'responseCode': 400, 'responseText': 'Incorrect username or password'})
 
+class AddDegreeView(generics.CreateAPIView):
+    serializer_class = DegreeSerializer
+
+    def create(self, request, *args, **kwargs):
+        username = request.data.get('username', None)
+        degree = request.data.get('degree', None)
+        speciality = request.data.get('speciality', None)
+
+        try:
+            doctor = Doctor.objects.get(username = username)
+        except Doctor.DoesNotExist:
+            return Response({'responseCode': 404, 'error': 'Doctor not found'}, status=404)
+        
+        print('This really sucks')
+        
+        deg = Degree.objects.filter(username = username, degree = degree, speciality = speciality).first()
+
+        print('This really sucks again')
+
+        if deg is not None:
+            return Response({'responseCode': 404, 'error': 'Degree already exists'}, status = 404)
+        
+        serializer = self.get_serializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            # return Response(serializer.data, status=201)
+            return Response({'responseCode': 200, 'status': 'Degree added', 'treatment': serializer.data})
+        else:
+            #return Response(serializer.errors, status=400)
+            return Response({'responseCode': 400, 'status': serializer.errors})

@@ -47,6 +47,11 @@ class Degree(models.Model):
     degree = models.CharField(max_length = 10, null = False)
     speciality = models.CharField(max_length= 20, null = True)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields = ['username', 'degree', 'speciality'], name = 'unique_doctor_degree_speciality')
+        ]
+
 class Consultency(models.Model):
     doctor = models.ForeignKey(Doctor, on_delete= models.CASCADE, related_name='consultency')
     clinic = models.ForeignKey(Clinic, on_delete= models.CASCADE)
