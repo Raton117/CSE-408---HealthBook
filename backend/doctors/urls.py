@@ -10,4 +10,5 @@ urlpatterns = [
     path('signup', views.DoctorSignupView.as_view()),
     path('add-degree', views.AddDegreeView.as_view()),
     path('list-of-degrees', views.ListofDegreesView.as_view()),
+    path('add-consultency', views.AddConsultencyView.as_view()),
 ]

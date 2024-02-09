@@ -4,7 +4,8 @@ from .models import Hospital, Doctor, Clinic, Consultency, ConsultencyDay, Degre
 from treatments.models import Request
 from patients.models import Patient
 from treatments.serializers import RequestSerializer, TreatmentSerializer
-from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer, DoctorSignupSerializer
+from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer, DoctorSignupSerializer, AddDegreeSerializer, AddConsultencySerializer, AddConsultencyDaysSerializer, ConsultencySerializer
+from datetime import datetime
 
 #Create your views here.
 
@@ -35,9 +36,12 @@ class CreateTreatmentView(generics.CreateAPIView):
         # Retrieve patient and doctor objects
         try:
             patient = Patient.objects.get(username = patient_username)
+        except Patient.DoesNotExist:
+            return Response({'error': 'Patient not found'}, status=404)
+        try:
             doctor = Doctor.objects.get(username=doctor_username)
-        except Patient.DoesNotExist or Doctor.DoesNotExist:
-            return Response({'error': 'Patient or doctor not found'}, status=404)
+        except Doctor.DoesNotExist:
+            return Response({'error': 'Doctor not found'}, status=404)
 
         # Create the treatment object
         serializer = TreatmentSerializer(data={
@@ -92,8 +96,6 @@ class DoctorSignupView(generics.CreateAPIView):
 
         username = serializer.validated_data['username']
 
-        print(username)
-
         if Doctor.objects.filter(username = username).exists():
             return Response({'error': 'Username is already taken', 'responseCode': 400}, status = status.HTTP_400_BAD_REQUEST)
 
@@ -114,7 +116,7 @@ class DoctorSignupView(generics.CreateAPIView):
         return Response({'username': serializer.instance.username, 'responseCode': 201}, status = status.HTTP_201_CREATED, headers = headers)
 
 class AddDegreeView(generics.CreateAPIView):
-    serializer_class = DegreeSerializer
+    serializer_class = AddDegreeSerializer
 
     def create(self, request, *args, **kwargs):
         username = request.data.get('username', None)
@@ -126,12 +128,7 @@ class AddDegreeView(generics.CreateAPIView):
         except Doctor.DoesNotExist:
             return Response({'responseCode': 404, 'error': 'Doctor not found'}, status=404)
         
-        print('This really sucks')
-        
         deg = Degree.objects.filter(username = username, degree = degree, speciality = speciality).first()
-
-        print('This really sucks again')
-
         if deg is not None:
             return Response({'responseCode': 404, 'error': 'Degree already exists'}, status = 404)
         
@@ -150,5 +147,51 @@ class ListofDegreesView(generics.ListAPIView):
         degrees = Degree.objects.filter(username = username)
         return Response({'responseCode': 200, 'degrees': DegreeSerializer(degrees, many = True).data})
 
+class AddConsultencyView(generics.CreateAPIView):
+    serializer_class = AddConsultencySerializer
+    def create(self, request, *args, **kwargs):
+        doctor_username = request.data.get('doctor_username', None)
+        clinic_name = request.data.get('clinic_name', None)
+        room = request.data.get('room', None)
+        start_time = request.data.get('start_time', None)
+        end_time = request.data.get('end_time', None)
+        start_time = datetime.strptime(start_time, "%H:%M:%S").time()
+        end_time = datetime.strptime(end_time, "%H:%M:%S").time()
+        days = request.data.get('days', None)
 
+        # Retrieve patient and doctor objects
+        try:
+            doctor = Doctor.objects.get(username = doctor_username)
+            #clinic = Clinic.objects.get(name = clinic_name)
+        except Doctor.DoesNotExist:
+            return Response({'error': 'Doctor not found'}, status=404)
         
+        try:
+            clinic = Clinic.objects.get(name=clinic_name)
+        except Clinic.DoesNotExist:
+            return Response({'error': 'Clinic not found'}, status=404)
+        
+        serializer = AddConsultencySerializer(data = {
+            'room': room,
+            'start_time': start_time,
+            'end_time': end_time,
+            'clinic': clinic.pk,
+            'doctor': doctor.pk
+        })
+
+        if serializer.is_valid():
+            serializer.save()
+            consultency = Consultency.objects.get(room = room, start_time = start_time, end_time = end_time, clinic = clinic, doctor = doctor)
+            data = []
+            for day in days:
+                data.append({'consultency': consultency.pk, 'day': day})
+            serializer2 = AddConsultencyDaysSerializer(data = data, many = True)
+            if serializer2.is_valid():
+                serializer2.save()
+                return Response({'responseCode': 200, 'status': 'Consultency created', 'consultency': ConsultencySerializer(consultency).data})
+            else:
+                consultency.delete()
+                return Response({'responseCode': 400, 'status': serializer2.errors})
+        else:
+            #return Response(serializer.errors, status=400)
+            return Response({'responseCode': 400, 'status': serializer.errors})

@@ -66,7 +66,17 @@ class DoctorSignupSerializer(serializers.ModelSerializer):
         validated_data['hospital'] = hospital
         return super().create(validated_data)
 
-class DegreeSerializer(serializers.ModelSerializer):
+class AddDegreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Degree
         fields = ('username', 'degree', 'speciality')
+
+class AddConsultencySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Consultency
+        fields = '__all__'
+
+class AddConsultencyDaysSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = ConsultencyDay
+        fields = '__all__'
