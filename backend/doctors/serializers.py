@@ -43,5 +43,4 @@ class DoctorSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
-
-
+#class DoctorLoginSerializer(serializers.ModelSerializer):

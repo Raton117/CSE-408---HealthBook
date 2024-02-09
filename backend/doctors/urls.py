@@ -6,4 +6,5 @@ urlpatterns = [
     path('request-data', views.RequestPatientData.as_view()),
     path('add-treatment', views.CreateTreatmentView.as_view()),
     path('profile', views.DoctorProfileView.as_view()),
+    path('login', views.DoctorLoginView.as_view()),
 ]

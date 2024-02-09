@@ -69,3 +69,17 @@ class DoctorProfileView(generics.RetrieveAPIView):
                 return Response({'ResponseCode': 200, 'doctor': DoctorSerializer(doctor, fields = dynamic_attributes).data})
 
         return Response({'ResponseCode': 400}, status= status.HTTP_400_BAD_REQUEST)
+
+class DoctorLoginView(generics.GenericAPIView):
+    serializer_class = DoctorSerializer
+    
+    def post(self, request, *args, **kwargs):
+        username = request.data['username']
+        password = request.data['password']
+        doctor = Doctor.objects.filter(username = username, password = password).first()
+
+        if doctor is not None:
+            return Response({'responseCode': 200, 'username': username})
+        else:
+            return Response({'responseCode': 400, 'responseText': 'Incorrect username or password'})
+
