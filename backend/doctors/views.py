@@ -143,3 +143,12 @@ class AddDegreeView(generics.CreateAPIView):
         else:
             #return Response(serializer.errors, status=400)
             return Response({'responseCode': 400, 'status': serializer.errors})
+        
+class ListofDegreesView(generics.ListAPIView):
+    def list(self, request, *args, **kwargs):
+        username = request.GET.get('username', None)
+        degrees = Degree.objects.filter(username = username)
+        return Response({'responseCode': 200, 'degrees': DegreeSerializer(degrees, many = True).data})
+
+
+        
