@@ -43,6 +43,29 @@ class DoctorSerializer(serializers.ModelSerializer):
             for field_name in existing - allowed:
                 self.fields.pop(field_name)
 
+class DoctorSignupSerializer(serializers.ModelSerializer):
+    password = serializers.CharField(write_only = True, required = True, style = {'input_type': 'password'})
+    password_confirmation = serializers.CharField(write_only = True, required = True, style = {'input_type': 'password'})
+    hospital_name = serializers.CharField(write_only = True, required = True)
+
+    class Meta:
+        model = Doctor
+        fields = ('username', 'password', 'password_confirmation', 'name', 'email', 'phone_number', 'dob', 'designation', 'hospital_name', 'department')
+
+    def validate(self, data):
+        if data['password'] != data['password_confirmation']:
+            raise serializers.ValidationError("Passwords do not match.")
+        return data
+    
+    def create(self, validated_data):
+        validated_data.pop('password_confirmation', None)
+        hospital_name = validated_data.pop('hospital_name', None)
+        print(hospital_name)
+        hospital = Hospital.objects.filter(name = hospital_name).first()
+        print(hospital)
+        validated_data['hospital'] = hospital
+        return super().create(validated_data)
+
 class DegreeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Degree

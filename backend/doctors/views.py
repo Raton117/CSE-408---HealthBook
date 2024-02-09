@@ -4,7 +4,7 @@ from .models import Hospital, Doctor, Clinic, Consultency, ConsultencyDay, Degre
 from treatments.models import Request
 from patients.models import Patient
 from treatments.serializers import RequestSerializer, TreatmentSerializer
-from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer
+from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer, DoctorSignupSerializer
 
 #Create your views here.
 
@@ -82,6 +82,36 @@ class DoctorLoginView(generics.GenericAPIView):
             return Response({'responseCode': 200, 'username': username})
         else:
             return Response({'responseCode': 400, 'responseText': 'Incorrect username or password'})
+        
+class DoctorSignupView(generics.CreateAPIView):
+    serializer_class = DoctorSignupSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data = request.data)
+        serializer.is_valid(raise_exception = True)
+
+        username = serializer.validated_data['username']
+
+        print(username)
+
+        if Doctor.objects.filter(username = username).exists():
+            return Response({'error': 'Username is already taken', 'responseCode': 400}, status = status.HTTP_400_BAD_REQUEST)
+
+        email = serializer.validated_data['email']
+        if Doctor.objects.filter(email = email).exists():
+            return Response({'error': 'Email is already taken', 'responseCode': 400}, status = status.HTTP_400_BAD_REQUEST)
+
+        phone_number = serializer.validated_data['phone_number']
+        if Doctor.objects.filter(phone_number = phone_number).exists():
+            return Response({'error': 'Phone Number is already taken', 'responseCode': 400}, status = status.HTTP_400_BAD_REQUEST)
+
+        hospital_name = serializer.validated_data['hospital_name']
+        if not Hospital.objects.filter(name = hospital_name).exists():
+            return Response({'error': "Hospital doesn't exist", 'responseCode': 400}, status = status.HTTP_400_BAD_REQUEST)
+
+        self.perform_create(serializer)
+        headers = self.get_success_headers(serializer.data)
+        return Response({'username': serializer.instance.username, 'responseCode': 201}, status = status.HTTP_201_CREATED, headers = headers)
 
 class AddDegreeView(generics.CreateAPIView):
     serializer_class = DegreeSerializer
