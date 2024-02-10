@@ -2,8 +2,8 @@ import React, { useState } from "react";
 import axios from 'axios';
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
-import Navbar from './navbar';
-const LoginPage = ({ setIsAuthenticated }) => {
+
+const DoctorLoginPage = ({setIsAuthenticated}) => {
   const [username, setUsername] = useState("");
   const [pass, setPass] = useState("");
   
@@ -19,7 +19,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
   const doLogin = async (e) => {
   
 
-    const res = await axios.post("http://localhost:8000/patients/login", {
+    const res = await axios.post("http://localhost:8000/doctors/login", {
       username: username,
       password: pass,
     });
@@ -27,15 +27,15 @@ const LoginPage = ({ setIsAuthenticated }) => {
    
     if (data.responseCode == 200) {
       localStorage.setItem("username", username);
-      localStorage.setItem("userRole",'patient' );
-      setIsAuthenticated(true);
+      localStorage.setItem("userRole",'doctor' );
+      setIsAuthenticated(true)
       navigate("/");
     }
   }
   return (
     <div className="flex items-center justify-center h-screen bg-transparent">
       <div className="bg-white p-20 rounded shadow-md">
-        <h2 className="text-2xl font-bold mb-4 text-center">Login</h2>
+        <h2 className="text-2xl font-bold mb-4 text-center">Hi,Doctor</h2>
 
         <div className="mb-4">
           <label className="block text-gray-700 text-sm font-bold mb-2">
@@ -74,7 +74,7 @@ const LoginPage = ({ setIsAuthenticated }) => {
           Login
         </button>
         <div className="flex justify-center mt-4">
-        <Link to ='/doctorlogin' className=" hover:bg-blue-700 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login  as a Doctor</Link>
+        <Link to ='/login' className=" hover:bg-red-300 font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">Login  as a Patient</Link>
         </div>
         
       </div>
@@ -82,4 +82,4 @@ const LoginPage = ({ setIsAuthenticated }) => {
   );
 };
 
-export default LoginPage;
+export default DoctorLoginPage;

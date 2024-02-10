@@ -2,7 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 
 // You can replace 'YourLogo.png' with the actual path to your logo file
-import YourLogo from "../Components/HBlogo.png";
+import YourLogo from "../../Components/HBlogo.png"
 
 const DocNavbar = ({isAuthenticated,onLogout}) => {
   
@@ -39,7 +39,7 @@ const DocNavbar = ({isAuthenticated,onLogout}) => {
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
               <Link
-                to="/profileviewpage"
+                to="/doctorprofileview"
                 className="bg-blue-500 text-2xl font-poppins text-white p-3 rounded hover:bg-blue-700"
               >
                 Profile

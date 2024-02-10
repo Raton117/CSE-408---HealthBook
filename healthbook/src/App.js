@@ -11,18 +11,46 @@ import DoctorProfile from './Pages/DoctorProfile'
 import Signup from './Pages/Signup'
 import ProfileViewPage from './Pages/ProfileView'
 import UpdateProfilePage from './Pages/updateprofile'
-// import HealthAnalysis from './Pages/HealthAnalysis'
-// import MyDoctors from './Pages/MyDoctors'
-// import Warnings from './Pages/Warnings'
 import PrescriptionRequest from './Pages/Request'
+//doctor's pages
+import DocNavbar from './Pages/Doctor/Docnavbar'
+import DoctorLogin from './Pages/Doctor/DoctorLogin'
+import DoctorSidebar from './Pages/Doctor/DoctorSidebar'
+
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  //console.log("this is authentication in app.js"+isAuthenticated)
+  
+  const getUserRole = () => {
+    return localStorage.getItem('userRole'); // Or sessionStorage if you used that
+  };
+  const renderNavbar = () => {
+    const userRole = getUserRole();
+    console.log(userRole+" user role is app.ks");
+    switch (userRole) {
+      case 'doctor':
+        console.log("doctor is here");
+        return <DocNavbar isAuthenticated={isAuthenticated} onLogout={handleLogout}/>;
+      
+      default:
+        return <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout}/>
+    }
+  };
+  const renderSidebar = () => {
+    const userRole = getUserRole();
+    
+    switch (userRole) {
+      case 'doctor':
+        
+        return <DoctorSidebar />;
+      
+      default:
+        return <Sidebar/>
+    }
+  };
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    // Add any other logout logic here, e.g., clearing localStorage
     localStorage.removeItem('patient_username'); // Example of clearing user data
   };
   return (
@@ -33,7 +61,7 @@ const App = () => {
     <nav class=" shadow-lg top-0">
   <div class="max-w-full  px-4">
     
-        <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout}/>
+       {renderNavbar()}
         {/* navbar 22 */}
       </div>
     
@@ -42,7 +70,7 @@ const App = () => {
     <div class="flex flex-wrap flex-row">
     <div className="bg-dimBlue h-lvh w-1/6 top left-0">
       <div className="p-4">
-        <Sidebar/>
+        {renderSidebar()}
       </div>
     </div>
 
@@ -59,6 +87,7 @@ const App = () => {
       <Route path="/PrescriptionRequest" element={<PrescriptionRequest />} />
       <Route path="/profileviewpage" element={<ProfileViewPage />} />
       <Route path="/updateprofile" element={<UpdateProfilePage />} />
+      <Route path='/doctorlogin' element={<DoctorLogin setIsAuthenticated={setIsAuthenticated}/>}/>
       {/* } />
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />
       <Route path="/MyDoctors" element={<MyDoctors />} />
