@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from .models import Hospital, Doctor, Clinic, Consultency, ConsultencyDay, Degree
 from treatments.models import Request, Prescription, Treatment, PrescriptionAccess
 from patients.models import Patient
+from patients.serializers import PatientSerializer
 from treatments.serializers import RequestSerializer, TreatmentSerializer, PrescriptionSerializer, PrescriptionAccessSerializer
 from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer, DoctorSignupSerializer, AddDegreeSerializer, AddConsultencySerializer, AddConsultencyDaysSerializer, ConsultencySerializer
 from datetime import datetime
@@ -238,3 +239,12 @@ class GetPrescriptionView(generics.RetrieveAPIView):
         if prescription_access is None or prescription_access.status != 'accepted':
             return Response({'responseCode': 400, 'status': 'request not allowed'})
         return Response({'responseCode': 200, 'prescription': PrescriptionSerializer(prescription).data})
+    
+class PatientSearchAPI(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        username = request.GET.get('username')
+        patient = Patient.objects.filter(username = username).first()
+        if patient is None:
+            return Response({'responseCode': 404, 'status' :'Patient not found'})
+        dynamic_attributes = ['username', 'password', 'name', 'email', 'area']
+        return Response({'responseCode': 200, 'patient': PatientSerializer(patient, fields = dynamic_attributes).data})
