@@ -1,9 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import Hospital, Doctor, Clinic, Consultency, ConsultencyDay, Degree
-from treatments.models import Request
+from treatments.models import Request, Prescription, Treatment
 from patients.models import Patient
-from treatments.serializers import RequestSerializer, TreatmentSerializer
+from treatments.serializers import RequestSerializer, TreatmentSerializer, PrescriptionSerializer
 from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer, DoctorSignupSerializer, AddDegreeSerializer, AddConsultencySerializer, AddConsultencyDaysSerializer, ConsultencySerializer
 from datetime import datetime
 
@@ -195,3 +195,26 @@ class AddConsultencyView(generics.CreateAPIView):
         else:
             #return Response(serializer.errors, status=400)
             return Response({'responseCode': 400, 'status': serializer.errors})
+
+class UploadPrescriptionView(generics.CreateAPIView):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
+
+    def create(self, request, *args, **kwargs):
+        print('prescription upload requested')
+        data = request.data
+        treatment_id = data.get('treatment')
+        treatment = Treatment.objects.get(pk=treatment_id)
+        print(data['treatment'])
+        data['patient_name'] = treatment.patient.name
+        data['doctor_name'] = treatment.doctor.name
+        #print(patient_name)
+        #print(doctor_name)
+        # return Response({'responseCode': 200})
+        serializer = PrescriptionSerializer(data = data)
+        if serializer.is_valid():
+            prescription = serializer.save()
+            response_serializer = self.get_serializer(prescription)
+            return Response(response_serializer.data, status = 201)
+        else:
+            return Response(serializer.errors, status = 400)

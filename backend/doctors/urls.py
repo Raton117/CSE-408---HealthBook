@@ -11,4 +11,5 @@ urlpatterns = [
     path('add-degree', views.AddDegreeView.as_view()),
     path('list-of-degrees', views.ListofDegreesView.as_view()),
     path('add-consultency', views.AddConsultencyView.as_view()),
+    path('upload-prescription', views.UploadPrescriptionView.as_view()),
 ]
