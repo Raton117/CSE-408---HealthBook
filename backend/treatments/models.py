@@ -109,3 +109,14 @@ class Medicine(models.Model):
     breakfast = models.BooleanField(default = False)
     lunch = models.BooleanField(default = False)
     dinner = models.BooleanField(default = False)
+
+class PrescriptionAccess(models.Model):
+    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE)
+    doctor = models.ForeignKey(Doctor, on_delete = models.CASCADE)
+    patient = models.ForeignKey(Patient, on_delete = models.CASCADE)
+    status = models.CharField(max_length = 20, choices = STATUS_CHOICES, default = 'pending')
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['prescription', 'doctor'], name = 'unique_prescription_doctor')
+        ]

@@ -12,5 +12,5 @@ urlpatterns = [
     path('response-access', views.RequestUpdateStatusView.as_view()),
     path('update', views.PatientUpdateProfileView.as_view()),
     path('upload-prescription', views.UploadPrescriptionView.as_view()),
-    path('get-prescription', views.GetPrescriptionView.as_view())
+    path('get-prescription', views.GetPrescriptionView.as_view()),
 ]

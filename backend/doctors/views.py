@@ -1,9 +1,9 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
 from .models import Hospital, Doctor, Clinic, Consultency, ConsultencyDay, Degree
-from treatments.models import Request, Prescription, Treatment
+from treatments.models import Request, Prescription, Treatment, PrescriptionAccess
 from patients.models import Patient
-from treatments.serializers import RequestSerializer, TreatmentSerializer, PrescriptionSerializer
+from treatments.serializers import RequestSerializer, TreatmentSerializer, PrescriptionSerializer, PrescriptionAccessSerializer
 from .serializers import HospitalSerializer, DoctorSerializer, DegreeSerializer, DoctorSignupSerializer, AddDegreeSerializer, AddConsultencySerializer, AddConsultencyDaysSerializer, ConsultencySerializer
 from datetime import datetime
 
@@ -205,12 +205,9 @@ class UploadPrescriptionView(generics.CreateAPIView):
         data = request.data
         treatment_id = data.get('treatment')
         treatment = Treatment.objects.get(pk=treatment_id)
-        print(data['treatment'])
         data['patient_name'] = treatment.patient.name
+        data['patient'] = treatment.patient.username
         data['doctor_name'] = treatment.doctor.name
-        #print(patient_name)
-        #print(doctor_name)
-        # return Response({'responseCode': 200})
         serializer = PrescriptionSerializer(data = data)
         if serializer.is_valid():
             prescription = serializer.save()
@@ -218,3 +215,11 @@ class UploadPrescriptionView(generics.CreateAPIView):
             return Response(response_serializer.data, status = 201)
         else:
             return Response(serializer.errors, status = 400)
+
+class PrescriptionAccessView(generics.CreateAPIView):
+    def post(self, request, *args, **kwargs):
+        serializer = PrescriptionAccessSerializer(data = request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status = status.HTTP_201_CREATED)
+        return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)

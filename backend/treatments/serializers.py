@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Request, Treatment, Prescription, Symptom, Test, Diagnosis, Advice, Medicine
+from .models import Request, Treatment, Prescription, Symptom, Test, Diagnosis, Advice, Medicine, PrescriptionAccess
 from patients.models import Patient
 from doctors.models import Doctor
 
@@ -119,3 +119,7 @@ class PrescriptionSerializer(serializers.ModelSerializer):
 
         return prescription
 
+class PrescriptionAccessSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PrescriptionAccess
+        fields = '__all__'

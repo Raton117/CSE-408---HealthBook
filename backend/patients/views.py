@@ -195,5 +195,10 @@ class UploadPrescriptionView(generics.CreateAPIView):
 class GetPrescriptionView(generics.RetrieveAPIView):
     def retrieve(self, request, *args, **kwargs):
         id = request.GET.get('id', None)
+        username = request.GET.get('username', None);
         prescription = Prescription.objects.filter(pk = id).first()
-        return Response({'responseCode' : '200', 'prescription': PrescriptionSerializer(prescription).data})
+        if prescription is None:
+            return Response({'responseCode': '404', 'status': 'Prescription not found'})
+        if username != prescription.patient.username:
+            return Response({'responseCode': '400', 'status': 'Access not allowed'})
+        return Response({'responseCode': '200', 'prescription': PrescriptionSerializer(prescription).data})
