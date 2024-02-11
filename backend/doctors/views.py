@@ -216,7 +216,7 @@ class UploadPrescriptionView(generics.CreateAPIView):
         else:
             return Response(serializer.errors, status = 400)
 
-class PrescriptionAccessView(generics.CreateAPIView):
+class PrescriptionAccessCreateView(generics.CreateAPIView):
     def post(self, request, *args, **kwargs):
         serializer = PrescriptionAccessSerializer(data = request.data)
         if serializer.is_valid():

@@ -15,8 +15,8 @@ from .serializers import (
 # from ..doctors.serializers import HospitalSerializer, DoctorSerializer
 from doctors.models import Doctor, Hospital
 from doctors.serializers import HospitalSerializer, DoctorSerializer
-from treatments.models import Request, Prescription
-from treatments.serializers import RequestSerializer, PrescriptionSerializer
+from treatments.models import Request, Prescription, PrescriptionAccess
+from treatments.serializers import RequestSerializer, PrescriptionSerializer, PrescriptionAccessSerializer
 from django.http.response import JsonResponse
 from django.utils.dateparse import parse_date
 
@@ -202,3 +202,30 @@ class GetPrescriptionView(generics.RetrieveAPIView):
         if username != prescription.patient.username:
             return Response({'responseCode': '400', 'status': 'Access not allowed'})
         return Response({'responseCode': '200', 'prescription': PrescriptionSerializer(prescription).data})
+    
+class GetPrescriptionAccessView(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        patient_username = request.GET.get('patient_username')
+        queryset = PrescriptionAccess.objects.filter(patient__username=patient_username)
+        serializer = PrescriptionAccessSerializer(queryset, many = True)
+        return Response(serializer.data)
+    
+class PrescriptionAccessUpdateAPIView(generics.UpdateAPIView):
+    def patch(self, request, *args, **kwargs):
+        patient_username = request.data.get('patient_username', None)
+        doctor_username = request.data.get('doctor_username', None)
+        prescription_id = request.data.get('prescription_id', None)
+        status = request.data.get('status', None)
+        prescription_access = PrescriptionAccess.objects.get(patient__username = patient_username, doctor__username = doctor_username, prescription__id = prescription_id)
+        if prescription_access.status != 'pending':
+            return Response({'responseCode': '400', 'status': 'Wrong request'})
+        if status != 'accepted' and status != 'rejected':
+            print(status)
+            return Response({'responseCode': '400', 'status': 'Wrong request status'})
+        if prescription_access is None:
+            return Response({'responseCode': '404', 'status': 'Update not allowed'})
+        serializer = PrescriptionAccessSerializer(prescription_access, data = request.data, partial = True)
+        if serializer.is_valid():
+            serializer.save()
+            return Response({'responseCode': 200, 'request': serializer.data})
+        return Response({'responseCode': 404, 'status': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
