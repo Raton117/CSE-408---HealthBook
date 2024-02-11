@@ -223,3 +223,18 @@ class PrescriptionAccessCreateView(generics.CreateAPIView):
             serializer.save()
             return Response(serializer.data, status = status.HTTP_201_CREATED)
         return Response(serializer.errors, status = status.HTTP_400_BAD_REQUEST)
+
+class GetPrescriptionView(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        id = request.GET.get('id', None)
+        doctor = request.GET.get('doctor', None)
+        prescription = Prescription.objects.filter(pk = id).first()
+        print(prescription)
+        if prescription is None:
+            return Response({'responseCode': 404, 'status': 'prescription not found'})
+        if prescription.treatment is not None and prescription.treatment.doctor.username == doctor:
+            return Response({'responseCode': 200, 'prescription': PrescriptionSerializer(prescription).data})
+        prescription_access = PrescriptionAccess.objects.filter(prescription__id = id, doctor__username = doctor).first()
+        if prescription_access is None or prescription_access.status != 'accepted':
+            return Response({'responseCode': 400, 'status': 'request not allowed'})
+        return Response({'responseCode': 200, 'prescription': PrescriptionSerializer(prescription).data})

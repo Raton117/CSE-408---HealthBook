@@ -13,4 +13,5 @@ urlpatterns = [
     path('add-consultency', views.AddConsultencyView.as_view()),
     path('upload-prescription', views.UploadPrescriptionView.as_view()),
     path('request-prescription-access', views.PrescriptionAccessCreateView.as_view()),
+    path('get-prescription', views.GetPrescriptionView.as_view()),
 ]
