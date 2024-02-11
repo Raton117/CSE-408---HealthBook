@@ -136,7 +136,7 @@ class AddDegreeView(generics.CreateAPIView):
         if serializer.is_valid():
             serializer.save()
             # return Response(serializer.data, status=201)
-            return Response({'responseCode': 200, 'status': 'Degree added', 'treatment': serializer.data})
+            return Response({'responseCode': 200, 'status': 'Degree added', 'degree': serializer.data})
         else:
             #return Response(serializer.errors, status=400)
             return Response({'responseCode': 400, 'status': serializer.errors})
