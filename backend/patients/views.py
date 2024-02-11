@@ -15,8 +15,8 @@ from .serializers import (
 # from ..doctors.serializers import HospitalSerializer, DoctorSerializer
 from doctors.models import Doctor, Hospital
 from doctors.serializers import HospitalSerializer, DoctorSerializer
-from treatments.models import Request
-from treatments.serializers import RequestSerializer
+from treatments.models import Request, Prescription
+from treatments.serializers import RequestSerializer, PrescriptionSerializer
 from django.http.response import JsonResponse
 from django.utils.dateparse import parse_date
 
@@ -177,3 +177,17 @@ class RequestUpdateStatusView(generics.UpdateAPIView):
             request.save()
             return Response({'responseCode': 200, 'status': 'Request Accepted'})
         return Response({'responseCode': 400, 'status': 'Request was already accepted or rejected'})
+
+class UploadPrescriptionView(generics.CreateAPIView):
+    queryset = Prescription.objects.all()
+    serializer_class = PrescriptionSerializer
+
+    def create(self, request, *args, **kwargs):
+        print('prescription upload requested')
+        serializer = PrescriptionSerializer(data = request.data)
+        if serializer.is_valid():
+            prescription = serializer.save()
+            response_serializer = self.get_serializer(prescription)
+            return Response(response_serializer.data, status = 201)
+        else:
+            return Response(serializer.errors, status = 400)

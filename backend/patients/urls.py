@@ -10,5 +10,6 @@ urlpatterns = [
     path('doctor', views.DoctorProfile.as_view()),
     path('get-access-requests', views.GetPendingRequests.as_view()),
     path('response-access', views.RequestUpdateStatusView.as_view()),
-    path('update', views.PatientUpdateProfileView.as_view())
+    path('update', views.PatientUpdateProfileView.as_view()),
+    path('upload-prescription', views.UploadPrescriptionView.as_view()),
 ]

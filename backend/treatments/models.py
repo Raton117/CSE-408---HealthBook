@@ -54,13 +54,13 @@ class Prescription(models.Model):
     patient_name = models.CharField(max_length = 100)
     doctor_name = models.CharField(max_length = 100)
     specialist = models.CharField(max_length = 100)
-    notes = models.CharField(max_length = 255)
+    notes = models.CharField(max_length = 255, null = True, blank = True)
     treatment = models.ForeignKey(Treatment, on_delete = models.SET_NULL, null = True, blank = True)
     patient = models.ForeignKey(Patient, on_delete = models.SET_NULL, null = True, blank = True)
     date = models.DateField()
 
 class Symptom(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE)
+    prescription = models.ForeignKey(Prescription, related_name = 'symptoms', on_delete = models.CASCADE)
     symptom = models.CharField(max_length = 255)
 
     class Meta:
@@ -70,7 +70,7 @@ class Symptom(models.Model):
         ]
 
 class Test(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE)
+    prescription = models.ForeignKey(Prescription, related_name = 'tests', on_delete = models.CASCADE)
     test_name = models.CharField(max_length = 255)
     image_path = models.CharField(max_length = 255, null = True, blank = True)
 
@@ -81,7 +81,7 @@ class Test(models.Model):
         ]
 
 class Diagnosis(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE)
+    prescription = models.ForeignKey(Prescription, related_name = 'diagnoses', on_delete = models.CASCADE)
     disease = models.CharField(max_length = 255)
 
     class Meta:
@@ -91,7 +91,7 @@ class Diagnosis(models.Model):
         ]
 
 class Advice(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE)
+    prescription = models.ForeignKey(Prescription, related_name = 'advices', on_delete = models.CASCADE)
     advice = models.CharField(max_length = 255)
 
     class Meta:
@@ -101,7 +101,7 @@ class Advice(models.Model):
         ]
 
 class Medicine(models.Model):
-    prescription = models.ForeignKey(Prescription, on_delete = models.CASCADE)
+    prescription = models.ForeignKey(Prescription, related_name = 'medicines', on_delete = models.CASCADE)
     medicine_name = models.CharField(max_length = 255)
     duration = models.IntegerField()
     interval = models.IntegerField(null = True, blank = True)
