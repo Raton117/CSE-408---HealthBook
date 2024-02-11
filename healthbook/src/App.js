@@ -16,8 +16,9 @@ import PrescriptionRequest from './Pages/Request'
 import DocNavbar from './Pages/Doctor/Docnavbar'
 import DoctorLogin from './Pages/Doctor/DoctorLogin'
 import DoctorSidebar from './Pages/Doctor/DoctorSidebar'
-
-
+import DoctorProfileView from './Pages/Doctor/DoctorProfileView'
+import DoctorProfileUpdate from './Pages/Doctor/DoctorProfileUpdate'
+import Tryform from './Pages/Doctor/form'
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
@@ -67,14 +68,14 @@ const App = () => {
     
     </nav>
 
-    <div class="flex flex-wrap flex-row">
+   <div className="flex flex-row min-h-screen">
     <div className="bg-dimBlue h-lvh w-1/6 top left-0">
       <div className="p-4">
         {renderSidebar()}
       </div>
     </div>
 
-    <div className="bg-amber-50 text-black h-screen w-5/6">
+    <div className="bg-amber-50  flex-1 overflow-auto text-black h-screen w-5/6">
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />
@@ -88,7 +89,11 @@ const App = () => {
       <Route path="/profileviewpage" element={<ProfileViewPage />} />
       <Route path="/updateprofile" element={<UpdateProfilePage />} />
       <Route path='/doctorlogin' element={<DoctorLogin setIsAuthenticated={setIsAuthenticated}/>}/>
+      <Route path='/doctorprofileview' element={<DoctorProfileView/>}/>
+      <Route path='/updatedoctorprofile' element={<DoctorProfileUpdate/>}/>
+      <Route path='/tryform' element={<Tryform/>}/>
       {/* } />
+      doctorprofileview
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />
       <Route path="/MyDoctors" element={<MyDoctors />} />
       <Route path="/Warnings" element={<Warnings />} />

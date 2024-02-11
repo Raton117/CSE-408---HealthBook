@@ -21,7 +21,7 @@ const ProfileViewPage = () => {
       // Fetch the user's details
       const fetchData = async () => {
         try {
-          const profileuser = localStorage.getItem('patient_username');
+          const profileuser = localStorage.getItem('username');
           const requestingUsername =profileuser; // 
   
           const response = await axios.get(`http://localhost:8000/patients/profile?username=${profileuser}&requesting_username=${requestingUsername}`);
