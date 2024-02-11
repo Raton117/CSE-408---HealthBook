@@ -191,3 +191,9 @@ class UploadPrescriptionView(generics.CreateAPIView):
             return Response(response_serializer.data, status = 201)
         else:
             return Response(serializer.errors, status = 400)
+        
+class GetPrescriptionView(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        id = request.GET.get('id', None)
+        prescription = Prescription.objects.filter(pk = id).first()
+        return Response({'responseCode' : '200', 'prescription': PrescriptionSerializer(prescription).data})
