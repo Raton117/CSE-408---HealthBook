@@ -32,7 +32,7 @@ const Sidebar = () => {
           </Link>
       
         <li>
-          <Link to="/requestToPatient" className={`flex items-center space-x-2 hover:text-gray-300 ${activeMenu === 'requestToPatient' ? 'text-rose-500' : ''}`} onClick={() => handleMenuClick('requestToPatient')}>
+          <Link to="/requestpatient" className={`flex items-center space-x-2 hover:text-gray-300 ${activeMenu === 'requestpatient' ? 'text-rose-500' : ''}`} onClick={() => handleMenuClick('requestpatient')}>
             <MdMedication size={iconSize} />
             <span className="text-2xl">Request Prescription</span>
           </Link>

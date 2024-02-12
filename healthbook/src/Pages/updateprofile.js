@@ -20,7 +20,7 @@ const UpdateProfilePage = () => {
     // Fetch the existing user data
     const fetchData = async () => {
       try {
-        const profileuser = localStorage.getItem("patient_username");
+        const profileuser = localStorage.getItem("username");
         const requestingUsername = profileuser; //
 
         const response = await axios.get(

@@ -12,6 +12,9 @@ import Signup from './Pages/Signup'
 import ProfileViewPage from './Pages/ProfileView'
 import UpdateProfilePage from './Pages/updateprofile'
 import PrescriptionRequest from './Pages/Request'
+import MyPrescriptions from './Pages/MyPrescriptions'
+import ReportUpload from './Pages/ReportUpload1'
+import Prescription from './Pages/Prescription'
 //doctor's pages
 import DocNavbar from './Pages/Doctor/Docnavbar'
 import DoctorLogin from './Pages/Doctor/DoctorLogin'
@@ -19,6 +22,7 @@ import DoctorSidebar from './Pages/Doctor/DoctorSidebar'
 import DoctorProfileView from './Pages/Doctor/DoctorProfileView'
 import DoctorProfileUpdate from './Pages/Doctor/DoctorProfileUpdate'
 import Tryform from './Pages/Doctor/form'
+import RequestPatient from './Pages/Doctor/RequestPatient'
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
@@ -91,7 +95,10 @@ const App = () => {
       <Route path='/doctorlogin' element={<DoctorLogin setIsAuthenticated={setIsAuthenticated}/>}/>
       <Route path='/doctorprofileview' element={<DoctorProfileView/>}/>
       <Route path='/updatedoctorprofile' element={<DoctorProfileUpdate/>}/>
-      <Route path='/tryform' element={<Tryform/>}/>
+      <Route path='/requestpatient' element={<RequestPatient/>}/>
+      <Route path='/prescriptionupload' element={<ReportUpload/>}/>
+      <Route path='/requestpatient' element={<RequestPatient/>}/>
+      <Route path='/requestpatient' element={<RequestPatient/>}/>
       {/* } />
       doctorprofileview
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />

@@ -31,8 +31,8 @@ const SignupPage = () => {
         dob: dateOfBirth,
       });
       console.log(response.data);
-      
-      if (response.data.success) {
+      console.log(response.data.responseCode)
+      if (response.data.responseCode == 201) {
         navigate('/login');
       } else {
         // unsuccessful signup, e.g., username already taken, etc.
