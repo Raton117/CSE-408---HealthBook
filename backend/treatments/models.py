@@ -29,7 +29,7 @@ class Request(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields = ['patient', 'doctor', 'date'], name = 'unique_patient_doctor_date'),
+            models.UniqueConstraint(fields = ['patient', 'doctor'], name = 'unique_patient_doctor_date'),
         ]
 
 class Treatment(models.Model):
