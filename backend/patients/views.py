@@ -229,3 +229,15 @@ class PrescriptionAccessUpdateAPIView(generics.UpdateAPIView):
             serializer.save()
             return Response({'responseCode': 200, 'request': serializer.data})
         return Response({'responseCode': 404, 'status': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
+    
+class GetListofprescriptionView(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        user = request.GET.get('user', None)
+        patient = request.GET.get('patient', None)
+        if user != patient:
+            return Response({'responseCode': 400, 'status': 'Not authorized to view prescription'})
+        prescriptions = Prescription.objects.filter(patient__username = patient).all()
+        if len(prescriptions) > 0:
+            return Response({'responseCode': 200, 'prescriptions': PrescriptionSerializer(prescriptions, many = True).data})
+        else:
+            return Response({'responseCode': 404, 'status': 'No prescription found'})
