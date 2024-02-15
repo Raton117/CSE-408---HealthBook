@@ -25,7 +25,7 @@ const MyDoctors = () => {
       .get(url, { params: query })
       .then((response) => {
         setDoctors(response.data.doctors);
-        console.log(response.data.doctors[0].consultency[0]);
+        //console.log(response.data.doctors[0].consultency[0]);
       })
       .catch((error) => {
         console.log(error);
