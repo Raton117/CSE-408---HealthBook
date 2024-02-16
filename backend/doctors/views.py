@@ -248,6 +248,11 @@ class GetListofprescriptionView(generics.RetrieveAPIView):
         if access is None or access.status != 'accepted':
             return Response({'responseCode': 400, 'status': 'Not authorized to view prescription'})
         prescriptions = Prescription.objects.filter(patient__username = patient).all()
+        if days is not None:
+            days = days * 30
+            current_date = datetime.now().date()
+            min_valid_date = current_date - timedelta(days=Medicine.objects.first().duration)
+            prescriptions = prescriptions.filter(date__gte = min_valid_date)
         if len(prescriptions) > 0:
             return Response({'responseCode': 200, 'prescriptions': PrescriptionSerializer(prescriptions, many = True).data})
         else:
