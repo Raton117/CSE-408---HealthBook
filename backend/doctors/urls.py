@@ -16,4 +16,6 @@ urlpatterns = [
     path('get-prescription', views.GetPrescriptionView.as_view()),
     path('patient', views.PatientSearchAPI.as_view()),
     path('get-list-of-prescriptions', views.GetListofprescriptionView.as_view()),
+    path('current-medicines', views.GetCurrentMedicinesView.as_view()),
+    path('current-diseases', views.GetCurrentDiseaseView.as_view()),
 ]

@@ -1,6 +1,6 @@
 from rest_framework import generics, permissions, status
 from rest_framework.response import Response
-from datetime import date
+from datetime import datetime, timedelta, date
 from .models import (
     Patient,
 )
@@ -15,8 +15,8 @@ from .serializers import (
 # from ..doctors.serializers import HospitalSerializer, DoctorSerializer
 from doctors.models import Doctor, Hospital
 from doctors.serializers import HospitalSerializer, DoctorSerializer
-from treatments.models import Request, Prescription, PrescriptionAccess
-from treatments.serializers import RequestSerializer, PrescriptionSerializer, PrescriptionAccessSerializer
+from treatments.models import Request, Prescription, PrescriptionAccess, Medicine, Diagnosis
+from treatments.serializers import RequestSerializer, PrescriptionSerializer, PrescriptionAccessSerializer, MedicineSerializer, DiagnosisSerializer
 from django.http.response import JsonResponse
 from django.utils.dateparse import parse_date
 
@@ -184,7 +184,13 @@ class UploadPrescriptionView(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         print('prescription upload requested')
-        serializer = PrescriptionSerializer(data = request.data)
+        data = request.data
+        patient = data.get('patient', None)
+        patient_object = Patient.objects.filter(username = patient).first()
+        if patient_object is None:
+            return Response({'responseCode': 404, 'status': 'no valid patient'})
+        data['patient_name'] = patient_object.name
+        serializer = PrescriptionSerializer(data = data)
         if serializer.is_valid():
             prescription = serializer.save()
             response_serializer = self.get_serializer(prescription)
@@ -241,3 +247,35 @@ class GetListofprescriptionView(generics.RetrieveAPIView):
             return Response({'responseCode': 200, 'prescriptions': PrescriptionSerializer(prescriptions, many = True).data})
         else:
             return Response({'responseCode': 404, 'status': 'No prescription found'})
+        
+class GetCurrentMedicinesView(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        user = request.GET.get('user', None)
+        patient = request.GET.get('patient', None)
+        disease = request.GET.get('disease', None)
+        current_date = datetime.now().date()
+        min_valid_date = current_date - timedelta(days=Medicine.objects.first().duration)
+
+        if user != patient:
+            return Response({'responseCode': 400, 'status': 'Not authorized to view prescription'})
+        medicines = Medicine.objects.filter(prescription__patient__username = patient, prescription__date__gte = min_valid_date).all()
+        if len(medicines) > 0:
+            return Response({'responseCode': 200, 'medicines': MedicineSerializer(medicines, many = True).data})
+        else:
+            return Response({'responseCode': 404, 'status': 'No medicine found'})
+        
+class GetCurrentDiseaseView(generics.RetrieveAPIView):
+    def retrieve(self, request, *args, **kwargs):
+        user = request.GET.get('user', None)
+        patient = request.GET.get('patient', None)
+        #disease = request.GET.get('disease', None)
+        current_date = datetime.now().date()
+        min_valid_date = current_date - timedelta(days=Medicine.objects.first().duration)
+        if user != patient:
+            return Response({'responseCode': 400, 'status': 'Not authorized to view prescription'})
+        #diagnoses = Diagnosis.objects.filter(prescription__patient__username = patient, prescription__date__gte = min_valid_date, disease__icontains = disease).all()
+        diagnoses = Diagnosis.objects.filter(prescription__patient__username = patient, prescription__date__gte = min_valid_date).all()
+        if len(diagnoses) > 0:
+            return Response({'responseCode': 200, 'medicines': DiagnosisSerializer(diagnoses, many = True).data})
+        else:
+            return Response({'responseCode': 404, 'status': 'No disease found'})
