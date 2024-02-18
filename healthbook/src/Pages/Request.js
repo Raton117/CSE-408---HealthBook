@@ -30,7 +30,7 @@ const Request = () => {
       e.preventDefault()
       const res = await axios.patch(`http://localhost:8000/patients/response-access`, // Updated endpoint
       {
-        doctor_username: "doctors[0].doctor_username",
+        doctor_username: doctors[0].doctor_username,
         patient_username: localStorage.getItem("username"),
         status: "Accepted"
       })
@@ -42,7 +42,7 @@ const Request = () => {
     e.preventDefault()
     const res = await axios.patch(`http://localhost:8000/patients/response-access`, // Updated endpoint
     {
-      doctor_username: "doctors[0].doctor_username",
+      doctor_username: doctors[0].doctor_username,
       patient_username:  localStorage.getItem("username"),
       status: "Rejected"
     })

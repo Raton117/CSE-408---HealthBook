@@ -49,7 +49,7 @@ const SignupPage = () => {
   return (
     // Adjusted classes for centering with margin and a max-width
     <div className="flex items-center justify-center h-screen bg-transparent">
-      <div className="bg-white p-20 rounded shadow-md">
+      <div className="bg-white pt-10 pr-20 pl-20 pb-20 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-center">Sign Up</h2>
 
         <div className="mb-4">
@@ -135,6 +135,16 @@ const SignupPage = () => {
             Signup
           </button>
         </div>
+
+        <div className="flex justify-center mt-4">
+          <button
+            className="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
+            onClick={() => navigate('/doctorsignup')}
+          >
+            Signup As a Doctor
+          </button>
+        </div>
+
       </div>
     </div>
   );

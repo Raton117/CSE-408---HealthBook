@@ -1,6 +1,7 @@
-import React,{useState} from 'react'
+import React,{useEffect, useState} from 'react'
 import styles from './style'
 import {Route,Routes} from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import Navbar from './Pages/navbar'
 import Sidebar from './Pages/sidebar'
 import HomePage from './Pages/Home'
@@ -15,6 +16,7 @@ import PrescriptionRequest from './Pages/Request'
 import MyPrescriptions from './Pages/MyPrescriptions'
 import ReportUpload from './Pages/ReportUpload1'
 import Prescription from './Pages/Prescription'
+import Chat from './Pages/Chats'
 //doctor's pages
 import DocNavbar from './Pages/Doctor/Docnavbar'
 import DoctorLogin from './Pages/Doctor/DoctorLogin'
@@ -23,24 +25,38 @@ import DoctorProfileView from './Pages/Doctor/DoctorProfileView'
 import DoctorProfileUpdate from './Pages/Doctor/DoctorProfileUpdate'
 import Tryform from './Pages/Doctor/form'
 import RequestPatient from './Pages/Doctor/RequestPatient'
+import PostPage from './Pages/Doctor/Posts'
+import DoctorSignup from './Pages/Doctor/DoctorSignup'
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  
+ 
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    if (!localStorage.getItem('username')) {
+      alert("You are not Logged In")
+     navigate('/login')
+    }
+  }, []);
+
   const getUserRole = () => {
     return localStorage.getItem('userRole'); // Or sessionStorage if you used that
   };
+
   const renderNavbar = () => {
     const userRole = getUserRole();
     console.log(userRole+" user role is app.ks");
     switch (userRole) {
       case 'doctor':
-        console.log("doctor is here");
+        
         return <DocNavbar isAuthenticated={isAuthenticated} onLogout={handleLogout}/>;
       
       default:
         return <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout}/>
     }
   };
+
+
   const renderSidebar = () => {
     const userRole = getUserRole();
     
@@ -56,15 +72,16 @@ const App = () => {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    localStorage.removeItem('patient_username'); // Example of clearing user data
+    localStorage.removeItem('username');
+    localStorage.removeItem('userRole'); // Example of clearing user data
   };
   return (
 <>
 
+   
 
-
-    <nav class=" shadow-lg top-0">
-  <div class="max-w-full  px-4">
+    <nav  className=" shadow-lg top-0 ">
+  <div className="max-w-full  px-4">
     
        {renderNavbar()}
         {/* navbar 22 */}
@@ -97,8 +114,9 @@ const App = () => {
       <Route path='/updatedoctorprofile' element={<DoctorProfileUpdate/>}/>
       <Route path='/requestpatient' element={<RequestPatient/>}/>
       <Route path='/prescriptionupload' element={<ReportUpload/>}/>
-      <Route path='/requestpatient' element={<RequestPatient/>}/>
-      <Route path='/requestpatient' element={<RequestPatient/>}/>
+      <Route path='/chat' element={<Chat/>}/>
+      <Route path='/createpost' element={<PostPage/>}/>
+      <Route path='/doctorsignup' element={<DoctorSignup />}/>
       {/* } />
       doctorprofileview
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />

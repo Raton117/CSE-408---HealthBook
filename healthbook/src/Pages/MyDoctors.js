@@ -48,7 +48,7 @@ const MyDoctors = () => {
   return (
     <>
       <div className="max-w-[1320px] mx-auto">
-        <h1 className="text-3xl font-bold text-center mt-10">My Doctors</h1>
+        <h1 className="text-3xl font-bold text-center mt-10">Doctors</h1>
       </div>
       <div className="flex flex-row ml-10 mt-10 ">
         <div className="bg-white h-auto w-3/4 mr-4 ">

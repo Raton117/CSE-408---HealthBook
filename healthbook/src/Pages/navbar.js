@@ -13,42 +13,39 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
     // Optionally redirect to the login page
   };
   return (
-    <nav className="bg-white text-gray-500 shadow-lg top-0">
+    <nav className="bg-gray-900 text-white shadow-lg top-0">
       <div className="max-w-full px-4 flex justify-between items-center h-24">
         <div className="flex items-center">
           <Link to="/">
             <img src={YourLogo} alt="Healthbook Logo" className="h-28 mr-20" />
           </Link>
 
-          <Link to="/" className="hover:text-black mr-8 text-2xl">
+          <Link to="/" className="hover:text-red-500 mr-8 text-2xl">
             Home
           </Link>
-          <Link to="/prescriptions" className="hover:text-black mr-8 text-2xl">
+          <Link to="/prescriptions" className="hover:text-red-500 mr-8 text-2xl">
             Prescriptions
           </Link>
-          <Link to="/tests" className="hover:text-black mr-8 text-2xl">
+          <Link to="/tests" className="hover:text-red-500 mr-8 text-2xl">
             Tests
           </Link>
-          <Link to="/currentMedication" className="hover:text-black text-2xl">
+          <Link to="/currentMedication" className="hover:text-red-500 text-2xl">
             Current Medication
           </Link>
+          <Link to ="/prescriptionupload" className="hover:text-red-500 text-2xl ml-8">Add Report</Link>
         </div>
 
         <div className="flex items-center space-x-4">
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
-              <Link to="/prescriptionupload">
-                <button className="bg-myblue text-2xl font-poppins text-white  rounded-lg border-myblue border-spacing-2 hover:bg-white hover:text-myblue">
-                  Add Report
-                </button>
-              </Link>
+             
               <Link
                 to="/profileviewpage"
-                className="bg-blue-500 text-2xl font-poppins text-white p-3 rounded hover:bg-blue-700"
+                className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Profile
               </Link>
-              <button className="hover:text-gray-300 text-2xl bg-red-400 p-3 rounded">
+              <button className="hover:text-gray-300 text-2xl bg-red-400 p-3 rounded-full font-poppins">
                 {" "}
                 <Link to="/login" onClick={logout}>
                   Logout
@@ -59,13 +56,13 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/login"
-                className="hover:text-gray-300 bg-myblue p-3 ml-8 text-2xl"
+                className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="hover:text-gray-300 bg-myblue p-3 ml-8 text-2xl"
+                className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Signup
               </Link>
