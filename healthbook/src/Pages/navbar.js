@@ -23,7 +23,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
           <Link to="/" className="hover:text-red-500 mr-8 text-2xl">
             Home
           </Link>
-          <Link to="/prescriptions" className="hover:text-red-500 mr-8 text-2xl">
+          <Link to="/myprescriptions" className="hover:text-red-500 mr-8 text-2xl">
             Prescriptions
           </Link>
           <Link to="/tests" className="hover:text-red-500 mr-8 text-2xl">

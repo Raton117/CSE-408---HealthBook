@@ -12,6 +12,7 @@ const DoctorSignup = () => {
   const [dateOfBirth, setDateOfBirth] = useState("");
   const [department, setDepartment] = useState("");
   const [designation, setDesignation] = useState("");
+  const [hospitalName, setHospitalName] = useState("");
 
   const navigate = useNavigate();
 
@@ -23,7 +24,7 @@ const DoctorSignup = () => {
     }
 
     try {
-      const response = await axios.post('http://localhost:8000/patients/signup', {
+      const response = await axios.post('http://localhost:8000/doctors/signup', {
         username: username,
         password: password,
         password_confirmation: confirmPassword,
@@ -31,7 +32,13 @@ const DoctorSignup = () => {
         email: email,
         phone_number: phoneNumber,
         dob: dateOfBirth,
+        department: department,
+        designation: designation,
+        hospital_name: hospitalName,
       });
+      
+      console.log(username, password, confirmPassword, name, email, phoneNumber, dateOfBirth, department, designation, hospitalName)
+
       console.log(response.data);
       console.log(response.data.responseCode)
       if (response.data.responseCode == 201) {
@@ -53,8 +60,10 @@ const DoctorSignup = () => {
     <div className="flex items-center justify-center h-screen bg-transparent">
       <div className="bg-white pt-10 pr-20 pl-20 pb-20 rounded shadow-md">
         <h2 className="text-2xl font-bold mb-4 text-center"> Doctor Sign Up</h2>
-
-        <div className="mb-4">
+        
+        
+        <div className="mb-4 flex">
+          <div className="mr-2">
           <input
             type="text"
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
@@ -65,7 +74,7 @@ const DoctorSignup = () => {
             name="username"
           />
         </div>
-        <div className="mb-6">
+        <div className="ml-8">
           <input
             type="text"
             value={name}
@@ -75,7 +84,11 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
-        <div className="mb-6">
+        </div>
+
+
+        <div className="mb-4 flex">
+          <div className="mr-2">
           <input
             type="password"
             value={password}
@@ -85,7 +98,10 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
-        <div className="mb-6">
+        
+
+
+        <div className="ml-8">
           <input
             type="password"
             value={confirmPassword}
@@ -95,9 +111,10 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
-        
+        </div>
 
-        <div className="mb-6">
+        
+          <div className="mr-2 mb-4">
           <input
             type="email"
             value={email}
@@ -107,8 +124,10 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
+   
 
-        <div className="mb-6">
+        <div className="mb-4 flex">
+          <div className="mr-2">
           <input
             type="text"
             value={phoneNumber}
@@ -118,7 +137,8 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
-        <div className="mb-6">
+    
+        <div className="ml-8">
           <input
             type="date"
             value={dateOfBirth}
@@ -128,8 +148,10 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
-
-        <div className="mb-6">
+        </div>
+         
+        <div className="mb-6 flex">
+        <div className="mr-2">
           <input
             type="text"
             value={department}
@@ -139,13 +161,26 @@ const DoctorSignup = () => {
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />
         </div>
+        
 
-        <div className="mb-6">
+        <div className="ml-6">
           <input
             type="text"
             value={designation}
             onChange={(e) => setDesignation(e.target.value)}
             placeholder="Designation"
+            required
+            className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
+          />
+        </div>
+        </div>
+        
+        <div className="mr-2 mb-4">
+          <input
+            type="text"
+            value={hospitalName}
+            onChange={(e) => setHospitalName(e.target.value)}
+            placeholder="Hospital Name"
             required
             className="w-full px-3 py-2 border focus:outline-none focus:border-blue-500 rounded"
           />

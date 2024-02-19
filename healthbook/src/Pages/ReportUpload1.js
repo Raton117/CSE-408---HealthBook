@@ -185,7 +185,7 @@ const PrescriptionUpload = () => {
       specialist: formData.doctorSpecialist,
       notes: formData.notes,
       //date: new Date("2024-01-12"),
-      date: "2024-01-12",
+      date: "2024-02-19",
       symptoms: symptomsObject,
       tests: testsObject,
       diagnoses: diagnosesObject,

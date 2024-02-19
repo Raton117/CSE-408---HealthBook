@@ -1,44 +1,105 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { useParams } from 'react-router-dom';
 
-const PrescriptionDetails = () => {
-  // Assuming 'finished' is a boolean value in your prescription object
-  const [finished, setFinished] = useState(prescription.finished || false);
-  const prescriptionId = '1';
+const PrescriptionDetail = () => {
+  const { id } = useParams();
+  const [prescription, setPrescription] = useState(null);
 
-const prescription = {
-  id: prescriptionId,
-  name: 'Sample Prescription',
-  disease: 'Common Cold',
-  date: '2022-02-10',
-  // Other prescription details...
-};
+  useEffect(() => {
+    const fetchPrescription = async () => {
+      try {
+        console.log(id);
+        const response = await axios.get(`http://localhost:8000/patients/get-prescription`, {
+          params: { id: id, username: localStorage.getItem('username') }
+        });
+        console.log(response.data);
+        setPrescription(response.data.prescription);
+      } catch (error) {
+        console.error('Error fetching prescription details:', error);
+      }
+    };
 
-  const toggleFinished = () => {
-    setFinished(!finished);
-    // Here, you might want to update the state in your backend/database as well
-  };
+    fetchPrescription();
+  }, [id]); // Depend only on id
+
+  if (!prescription) return <div>Loading...</div>;
 
   return (
-    <div className="max-w-4xl mx-auto p-5">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold mb-4">{prescription.title}</h2>
+    <div className="container mx-auto p-4">
+      <h1 className="text-xl font-bold mb-4">Prescription Details for {prescription.patient_name}</h1>
+      <div className="border rounded-md p-4 mb-4">
+        <p><strong>Doctor:</strong> {prescription.doctor_name}</p>
         <p><strong>Date:</strong> {prescription.date}</p>
-        <p><strong>Doctor:</strong> {prescription.doctor}</p>
-        <p className="mb-4"><strong>Description:</strong> {prescription.description}</p>
-
-        <label htmlFor="toggleFinished" className="flex items-center cursor-pointer">
-          <div className="relative">
-            <input id="toggleFinished" type="checkbox" className="sr-only" checked={finished} onChange={toggleFinished} />
-            <div className="block bg-gray-600 w-14 h-8 rounded-full"></div>
-            <div className={`dot absolute left-1 top-1 bg-white w-6 h-6 rounded-full transition ${finished ? 'transform translate-x-full bg-green-500' : 'bg-gray-400'}`}></div>
-          </div>
-          <div className="ml-3 text-gray-700 font-medium">{finished ? 'Finished' : 'Not Finished'}</div>
-        </label>
+        <p><strong>Address:</strong> {prescription.address}</p>
+        <p><strong>Age:</strong> {prescription.age}</p>
+        <p><strong>Weight:</strong> {prescription.weight} kg</p>
+        <p><strong>Blood Pressure:</strong> {prescription.bp_low}/{prescription.bp_high}</p>
+        <p><strong>Notes:</strong> {prescription.notes}</p>
       </div>
 
-      {/* More details and components related to the prescription can go here */}
+      <div className="border rounded-md p-4 mb-4">
+        <h2 className="text-lg font-bold mb-2">Symptoms</h2>
+        <ul className="list-disc pl-6">
+          {prescription.symptoms.map((symptom, index) => (
+            <li key={index}>{symptom.symptom}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="border rounded-md p-4 mb-4">
+        <h2 className="text-lg font-bold mb-2">Tests</h2>
+        <ul className="list-disc pl-6">
+          {prescription.tests.map((test, index) => (
+            <li key={index}>{test.test_name}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="border rounded-md p-4 mb-4">
+        <h2 className="text-lg font-bold mb-2">Diagnoses</h2>
+        <ul className="list-disc pl-6">
+          {prescription.diagnoses.map((diagnosis, index) => (
+            <li key={index}>{diagnosis.disease}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="border rounded-md p-4 mb-4">
+        <h2 className="text-lg font-bold mb-2">Advices</h2>
+        <ul className="list-disc pl-6">
+          {prescription.advices.map((advice, index) => (
+            <li key={index}>{advice.advice}</li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="container mx-auto p-4">
+      {/* Other prescription details */}
+      
+      <h2 className="text-lg font-bold mb-4">Medications</h2>
+      <div className="space-y-4">
+        {prescription.medicines.map((medication, index) => (
+          <div key={index} className="bg-gray-200 p-4 rounded-md">
+            <div className="flex justify-between items-center">
+              <span className="text-xl font-semibold">{medication.medicine_name}</span>
+            </div>
+            <p className="text-gray-600">{medication.duration} days</p>
+            <div className="flex space-x-2 mt-2">
+              {medication.meal_time === 'before' && <span className="text-green-500">Before Meal</span>}
+              {medication.meal_time === 'after' && <span className="text-red-500">After Meal</span>}
+            </div>
+            <div className="flex space-x-2 mt-2">
+              {medication.breakfast && <span className="text-blue-500">Breakfast</span>}
+              {medication.lunch && <span className="text-blue-500">Lunch</span>}
+              {medication.dinner && <span className="text-blue-500">Dinner</span>}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
     </div>
   );
 };
 
-export default PrescriptionDetails;
+export default PrescriptionDetail;

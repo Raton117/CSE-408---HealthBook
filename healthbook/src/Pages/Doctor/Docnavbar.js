@@ -40,11 +40,11 @@ const DocNavbar = ({isAuthenticated,onLogout}) => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/doctorprofileview"
-                className="bg-blue-500 text-2xl font-poppins text-white p-3 rounded hover:bg-blue-700"
+                className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Profile
               </Link>
-              <button className="hover:text-gray-300 text-2xl bg-red-400 p-3 rounded"> <Link to="/login" onClick={logout}>Logout</Link>
+              <button className="hover:text-gray-300 text-2xl bg-red-400 p-3 rounded-full"> <Link to="/login" onClick={logout}>Logout</Link>
                 
               </button>
             </div>
@@ -52,13 +52,13 @@ const DocNavbar = ({isAuthenticated,onLogout}) => {
             <div className="flex items-center space-x-4">
               <Link
                 to="/login"
-                className="hover:text-gray-300 bg-myblue p-3 ml-8 text-2xl"
+                className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Login
               </Link>
               <Link
                 to="/signup"
-                className="hover:text-gray-300 bg-myblue p-3 ml-8 text-2xl"
+                className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Signup
               </Link>
