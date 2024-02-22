@@ -37,6 +37,7 @@ const Sidebar = () => {
             <span className="text-2xl">Request Prescription</span>
           </Link>
         </li>
+        
       </ul>
     </div>
   );

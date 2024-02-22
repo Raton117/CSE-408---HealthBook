@@ -19,7 +19,6 @@ import Prescription from "./Pages/Prescription";
 import Chat from "./Pages/Chats";
 import CurrentMedications from "./Pages/currentMedications";
 
-
 //doctor's pages
 import DocNavbar from "./Pages/Doctor/Docnavbar";
 import DoctorLogin from "./Pages/Doctor/DoctorLogin";
@@ -31,10 +30,10 @@ import RequestPatient from "./Pages/Doctor/RequestPatient";
 import PostPage from "./Pages/Doctor/Posts";
 import DoctorSignup from "./Pages/Doctor/DoctorSignup";
 
-
 import AllPosts from "./Pages/Forum/PostList";
 import PostDetail from "./Pages/Forum/PostDetails";
-
+import PostPageNew from "./Pages/Forum/PostPageNew";
+import CreatePost from "./Pages/Forum/CreatePost";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -42,9 +41,18 @@ const App = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!localStorage.getItem("username")) {
-      alert("You are not Logged In");
-      navigate("/login");
+    // Check if the username exists in localStorage
+    const isLoggedIn = localStorage.getItem("username") !== null;
+    const userRole = getUserRole();
+
+    setIsAuthenticated(isLoggedIn);
+
+    if (!isLoggedIn) {
+      if (userRole === "doctor") {
+        navigate("/doctorlogin");
+      } else {
+        navigate("/login");
+      }
     }
   }, []);
 
@@ -118,9 +126,9 @@ const App = () => {
               path="/PrescriptionRequest"
               element={<PrescriptionRequest />}
             />
-            <Route path='/prescription/:id' element={<Prescription />} />
+            <Route path="/prescription/:id" element={<Prescription />} />
             <Route path="/myprescriptions" element={<MyPrescriptions />} />
-            <Route path='/currentMedication' element={<CurrentMedications />} />
+            <Route path="/currentMedication" element={<CurrentMedications />} />
             <Route path="/profileviewpage" element={<ProfileViewPage />} />
             <Route path="/updateprofile" element={<UpdateProfilePage />} />
             <Route
@@ -135,11 +143,14 @@ const App = () => {
             <Route path="/requestpatient" element={<RequestPatient />} />
             <Route path="/prescriptionupload" element={<ReportUpload />} />
             <Route path="/chat" element={<Chat />} />
-            <Route path="/createpost" element={<PostPage />} />
+            {/* <Route path="/createpost" element={<PostPage />} /> */}
+            <Route path="/createpost" element={<CreatePost />} />
             <Route path="/doctorsignup" element={<DoctorSignup />} />
             <Route path="/posts" element={<AllPosts />} />
             <Route path="/posts/:id" element={<PostDetail />} />
+            <Route path="/postsnew" element={<PostPageNew />} />
             {/* } />
+            
       doctorprofileview
       <Route path="/HealthAnalysis" element={<HealthAnalysis />} />
       <Route path="/MyDoctors" element={<MyDoctors />} />

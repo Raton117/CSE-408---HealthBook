@@ -30,8 +30,11 @@ const DocNavbar = ({isAuthenticated,onLogout}) => {
           <Link to="/posts" className="hover:text-black mr-8 text-2xl">
             Posts
           </Link>
-          <Link to="/currentTreatment" className="hover:text-black text-2xl">
+          <Link to="/currentTreatment" className="hover:text-black mr-8 text-2xl">
             Current Treatment
+          </Link>
+          <Link to="/viewprescriptions" className="hover:text-black  text-2xl">
+            All Prescriptions
           </Link>
         </div>
 
