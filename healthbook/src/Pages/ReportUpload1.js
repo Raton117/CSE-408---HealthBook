@@ -1,6 +1,11 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
+import medicineSuggestions from './medicines'; // Importing suggestions from the other file
+import form from './Doctor/form';
+import { Navigate, useParams } from 'react-router-dom';
+
+
 
 const PrescriptionUpload = () => {
   const [step, setStep] = useState(1); // Start from step 1
@@ -9,15 +14,16 @@ const PrescriptionUpload = () => {
   const [formData, setFormData] = useState({
     age: '',
     weight: '',
+    height: '',
     address: '',
     bp: '',
-    doctorName: '',
-    doctorSpecialist: '',
-    hospital: '',
-    continuation: '',
-    notes: ''
+    nextAppointment: '',
+    notes: '',
+    date: ''
     // Add more fields as needed
   });
+
+  const treatmentID = useParams();
 
   const [symptoms, setSymptoms] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState('');
@@ -91,6 +97,13 @@ const PrescriptionUpload = () => {
     setPrescriptionImage(e.target.files[0]);
   };
 
+  useEffect(() => {
+    
+    
+
+    
+  }, [treatmentID]);
+
 
     // Prescription Upload
     const [medications, setMedications] = useState([]);
@@ -109,7 +122,6 @@ const PrescriptionUpload = () => {
         setMedications([...medications, currentMedication]);
         setCurrentMedication({
           name: '',
-          description: '',
           mealTiming: '',
           courses: [],
           duration: '',
@@ -176,16 +188,15 @@ const PrescriptionUpload = () => {
       // random: "random"
       age: parseInt(formData.age),
       weight: parseInt(formData.weight),
+      height: parseInt(formData.height),
       address: formData.address,
       bp_low: parseInt(bp_low),
       bp_high: parseInt(bp_high),
-      patient_name: "raton",
-      patient: localStorage.getItem('username'),
-      doctor_name: formData.doctorName,
-      specialist: formData.doctorSpecialist,
+      treatment: treatmentID,
       notes: formData.notes,
+      next_appointment: parseInt(formData.nextAppointment),
       //date: new Date("2024-01-12"),
-      date: "2024-02-19",
+      date: formData.date,
       symptoms: symptomsObject,
       tests: testsObject,
       diagnoses: diagnosesObject,
@@ -194,6 +205,7 @@ const PrescriptionUpload = () => {
     });
     const data = response.data;
     console.log(data);
+    Navigate('/mytreatments');
   }
   // Handle form field changes
   const handleChange = (e) => {
@@ -220,6 +232,14 @@ const PrescriptionUpload = () => {
     // navigate('/nextFormPage'); // Uncomment and replace '/nextFormPage' with your actual path
   };
 
+  const handleSuggestionClick = (medicineName) => {
+    setCurrentMedication({ ...currentMedication, name: medicineName });
+  };
+
+  const filteredSuggestions = medicineSuggestions.filter(medicine =>
+    medicine.toLowerCase().includes(currentMedication.name.toLowerCase())
+  );
+
   // Render form page based on the current step
   const renderForm = () => {
     switch (step) {
@@ -239,51 +259,50 @@ const PrescriptionUpload = () => {
             <label className="block text-sm font-medium text-gray-700">Weight (kg)</label>
             <input type="number" name="weight" value={formData.weight} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
           </div>
+
         </div>
 
-        {/* Address */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Address</label>
-          <input type="text" name="address" value={formData.address} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+        {/* Address and Height */}
+        <div className="flex justify-between">
+          <div className="w-1/2 pr-2">
+            <label className="block text-sm font-medium text-gray-700">Address</label>
+            <input type="text" name="address" value={formData.address} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+          </div>
+          <div className="w-1/2 pl-2">
+            <label className="block text-sm font-medium text-gray-700">Height (cm)</label>
+            <input type="number" name="height" value={formData.height} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+          </div>
+
         </div>
 
-        {/* BP and Doctor Name */}
+        {/* BP and NextAppointment */}
         <div className="flex justify-between">
           <div className="w-1/2 pr-2">
             <label className="block text-sm font-medium text-gray-700">BP</label>
-            <input type="text" name="bp" value={formData.bp} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+            <input type="text"placeholder='120/80' name="bp" value={formData.bp} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
           </div>
           <div className="w-1/2 pl-2">
-            <label className="block text-sm font-medium text-gray-700">Doctor Name</label>
-            <input type="text" name="doctorName" value={formData.doctorName} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
+            <label className="block text-sm font-medium text-gray-700">Next Appointment (days)</label>
+            <input type="number" name="nextAppointment" value={formData.nextAppointment} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
           </div>
         </div>
 
-        {/* Specialist and Hospital */}
-        <div className="flex justify-between">
-          <div className="w-1/2 pr-2">
-            <label className="block text-sm font-medium text-gray-700">Specialist</label>
-            <input type="text" name="doctorSpecialist" value={formData.doctorSpecialist} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-          </div>
-          <div className="w-1/2 pl-2">
-            <label className="block text-sm font-medium text-gray-700">Hospital</label>
-            <input type="text" name="hospital" value={formData.hospital} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500" />
-          </div>
-        </div>
-
-        {/* Continuation and Notes */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Continuation</label>
-          <select name="continuation" value={formData.continuation} onChange={handleChange} className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500">
-            <option value="">Select</option>
-            <option value="yes">Yes</option>
-            <option value="no">No</option>
-          </select>
-        </div>
+        {/* Notes and Date */}
         <div>
           <label className="block text-sm font-medium text-gray-700">Notes</label>
           <textarea name="notes" value={formData.notes} onChange={handleChange} rows="4" className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"></textarea>
         </div>
+
+        <div className="mb-4">
+            <label className="block text-sm font-medium text-gray-700">Date</label>
+            <input
+              type="date"
+              name="date"
+              value={formData.date}
+              onChange={handleChange}
+              className="border p-2 w-full"
+            />
+          </div>
 
         
       </div>
@@ -414,18 +433,16 @@ const PrescriptionUpload = () => {
             onChange={(e) => setCurrentMedication({ ...currentMedication, name: e.target.value })}
             className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
           />
+        <ul>
+        {filteredSuggestions.slice(0,2).map((medicine, index) => (
+          <li key={index} onClick={() => handleSuggestionClick(medicine)}>
+            {medicine}
+          </li>
+        ))}
+      </ul>
         </div>
 
         {/* Description */}
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Description</label>
-          <textarea
-            value={currentMedication.description}
-            onChange={(e) => setCurrentMedication({ ...currentMedication, description: e.target.value })}
-            rows="3"
-            className="mt-1 block w-full px-3 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500"
-          ></textarea>
-        </div>
 
         {/* Meal Settings */}
         <div className="space-y-2">

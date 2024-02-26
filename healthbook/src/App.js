@@ -18,6 +18,7 @@ import ReportUpload from "./Pages/ReportUpload1";
 import Prescription from "./Pages/Prescription";
 import Chat from "./Pages/Chats";
 import CurrentMedications from "./Pages/currentMedications";
+import MyTreatments from "./Pages/MyTreatments";
 
 //doctor's pages
 import DocNavbar from "./Pages/Doctor/Docnavbar";
@@ -34,6 +35,7 @@ import AllPosts from "./Pages/Forum/PostList";
 import PostDetail from "./Pages/Forum/PostDetails";
 import PostPageNew from "./Pages/Forum/PostPageNew";
 import CreatePost from "./Pages/Forum/CreatePost";
+import AddTreatment from "./Pages/AddTreatment";
 
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -112,7 +114,7 @@ const App = () => {
 
         <div className="bg-amber-50  flex-1 overflow-auto text-black h-screen w-5/6">
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/" element={<AllPosts />} />
             <Route
               path="/login"
               element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
@@ -126,8 +128,11 @@ const App = () => {
               path="/PrescriptionRequest"
               element={<PrescriptionRequest />}
             />
+
             <Route path="/prescription/:id" element={<Prescription />} />
-            <Route path="/myprescriptions" element={<MyPrescriptions />} />
+            <Route path="/myprescriptions/:treatmentID" element={<MyPrescriptions />} />
+             
+
             <Route path="/currentMedication" element={<CurrentMedications />} />
             <Route path="/profileviewpage" element={<ProfileViewPage />} />
             <Route path="/updateprofile" element={<UpdateProfilePage />} />
@@ -141,21 +146,19 @@ const App = () => {
               element={<DoctorProfileUpdate />}
             />
             <Route path="/requestpatient" element={<RequestPatient />} />
-            <Route path="/prescriptionupload" element={<ReportUpload />} />
+            <Route path="/prescriptionupload/:treatmentID" element={<ReportUpload />} />
             <Route path="/chat" element={<Chat />} />
             {/* <Route path="/createpost" element={<PostPage />} /> */}
             <Route path="/createpost" element={<CreatePost />} />
             <Route path="/doctorsignup" element={<DoctorSignup />} />
             <Route path="/posts" element={<AllPosts />} />
             <Route path="/posts/:id" element={<PostDetail />} />
-            <Route path="/postsnew" element={<PostPageNew />} />
-            {/* } />
+            <Route path="/addtreatment" element={<AddTreatment />} />
+            <Route path="/mytreatments" element={<MyTreatments/>} />
+            {/* <Route path="/postsnew" element={<PostPageNew />} /> */}
+           
             
-      doctorprofileview
-      <Route path="/HealthAnalysis" element={<HealthAnalysis />} />
-      <Route path="/MyDoctors" element={<MyDoctors />} />
-      <Route path="/Warnings" element={<Warnings />} />
-      <Route path="/PrescriptionRequest" element={<PrescriptionRequest />} /> */}
+    
           </Routes>
         </div>
       </div>

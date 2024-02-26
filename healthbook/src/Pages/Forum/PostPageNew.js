@@ -19,16 +19,16 @@ const PostPageNew = ({ post }) => {
   
 
 
-  useEffect(() => {
-    const author = localStorage.getItem("username");
-    axios
-      .get(`http://localhost:8000/forum/list-of-posts?author=${author}`)
-      .then((response) => {
-        console.log(response.data);
-        setPosts(response.data.post);
-      })
-      .catch((error) => console.error(error));
-  }, []);
+  // useEffect(() => {
+  //   const author = localStorage.getItem("username");
+  //   axios
+  //     .get(`http://localhost:8000/forum/list-of-posts?author=${author}`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //       setPosts(response.data.post);
+  //     })
+  //     .catch((error) => console.error(error));
+  // }, []);
   
  
   return (

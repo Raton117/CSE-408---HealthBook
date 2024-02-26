@@ -23,8 +23,8 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
           <Link to="/" className="hover:text-red-500 mr-8 text-2xl">
             Home
           </Link>
-          <Link to="/myprescriptions" className="hover:text-red-500 mr-8 text-2xl">
-            Prescriptions
+          <Link to="/mytreatments" className="hover:text-red-500 mr-8 text-2xl">
+            Treatments
           </Link>
           <Link to="/tests" className="hover:text-red-500 mr-8 text-2xl">
             Tests
@@ -32,7 +32,7 @@ const Navbar = ({ isAuthenticated, onLogout }) => {
           <Link to="/currentMedication" className="hover:text-red-500 text-2xl">
             Current Medication
           </Link>
-          <Link to ="/prescriptionupload" className="hover:text-red-500 text-2xl ml-8">Add Report</Link>
+          <Link to ="/prescriptionupload" className="hover:text-red-500 text-2xl ml-8">Add Treatment</Link>
         </div>
 
         <div className="flex items-center space-x-4">
