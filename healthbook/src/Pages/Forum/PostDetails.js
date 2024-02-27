@@ -135,11 +135,13 @@ const PostDetail = () => {
     console.log(currentContent);
     console.log(commentId);
     
-    if(localStorage.getItem('username') === post.comments[id].author)
+    if(localStorage.getItem('username') === currentContent.author)
     {
       setEditingCommentId(commentId);
       setEditingContent(currentContent);
     }
+    console.log(editingCommentId)
+    console.log(editingContent)
    
   };
 

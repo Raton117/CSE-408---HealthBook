@@ -5,13 +5,36 @@ import { useParams, Link } from 'react-router-dom';
 const PrescriptionDetail = () => {
   const { id } = useParams();
   const [prescription, setPrescription] = useState(null);
+  const userRole = localStorage.getItem('userRole');
 
+  // useEffect(() => {
+  //   const fetchPrescription = async () => {
+  //     try {
+  //       const response = await axios.get(`http://localhost:8000/patients/get-prescription`, {
+  //         params: { id: id, username: localStorage.getItem('username') }
+  //       });
+  //       setPrescription(response.data.prescription);
+  //     } catch (error) {
+  //       console.error('Error fetching prescription details:', error);
+  //     }
+  //   };
+
+  //   fetchPrescription();
+  // }, [id]);
+  
   useEffect(() => {
     const fetchPrescription = async () => {
       try {
-        const response = await axios.get(`http://localhost:8000/patients/get-prescription`, {
-          params: { id: id, username: localStorage.getItem('username') }
-        });
+        let response;
+        if (userRole === 'doctor') {
+          response = await axios.get(`http://localhost:8000/doctors/get-prescription`, {
+            params: { id: id, username: localStorage.getItem('username') }
+          });
+        } else {
+          response = await axios.get(`http://localhost:8000/patients/get-prescription`, {
+            params: { id: id, username: localStorage.getItem('username') }
+          });
+        }
         setPrescription(response.data.prescription);
       } catch (error) {
         console.error('Error fetching prescription details:', error);
@@ -19,7 +42,7 @@ const PrescriptionDetail = () => {
     };
 
     fetchPrescription();
-  }, [id]);
+  }, [id, userRole]);
 
   if (!prescription) return <div>Loading...</div>;
 

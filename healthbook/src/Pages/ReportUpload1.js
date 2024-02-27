@@ -11,6 +11,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 const PrescriptionUpload = () => {
   const navigate = useNavigate();
   const [step, setStep] = useState(1); // Start from step 1
+  const userRole = localStorage.getItem('userRole');
 
   // const history = useHistory();
 
@@ -188,25 +189,69 @@ const PrescriptionUpload = () => {
     const [bp_low, bp_high] = formData.bp.split("/");
     console.log(bp_low);
     console.log(bp_high);
-    const response = await axios.post("http://127.0.0.1:8000/patients/upload-prescription", {
-      // random: "random"
-      age: parseInt(formData.age),
-      weight: parseInt(formData.weight),
-      height: parseInt(formData.height),
-      address: formData.address,
-      bp_low: parseInt(bp_low),
-      bp_high: parseInt(bp_high),
-      treatment: treatmentID,
-      notes: formData.notes,
-      next_appointment: parseInt(formData.nextAppointment),
-      //date: new Date("2024-01-12"),
-      date: formData.date,
-      symptoms: symptomsObject,
-      tests: testsObject,
-      diagnoses: diagnosesObject,
-      advices: advicesObject,
-      medicines: formattedArray
-    });
+    // const response = await axios.post("http://127.0.0.1:8000/patients/upload-prescription", {
+    //   // random: "random"
+    //   age: parseInt(formData.age),
+    //   weight: parseInt(formData.weight),
+    //   height: parseInt(formData.height),
+    //   address: formData.address,
+    //   bp_low: parseInt(bp_low),
+    //   bp_high: parseInt(bp_high),
+    //   treatment: treatmentID,
+    //   notes: formData.notes,
+    //   next_appointment: parseInt(formData.nextAppointment),
+    //   //date: new Date("2024-01-12"),
+    //   date: formData.date,
+    //   symptoms: symptomsObject,
+    //   tests: testsObject,
+    //   diagnoses: diagnosesObject,
+    //   advices: advicesObject,
+    //   medicines: formattedArray
+    // });
+
+    let response;
+    if (userRole === 'doctor') {
+      response = await axios.post("http://127.0.0.1:8000/doctors/upload-prescription", {
+        // random: "random"
+        age: parseInt(formData.age),
+        weight: parseInt(formData.weight),
+        height: parseInt(formData.height),
+        address: formData.address,
+        bp_low: parseInt(bp_low),
+        bp_high: parseInt(bp_high),
+        treatment: treatmentID,
+        notes: formData.notes,
+        next_appointment: parseInt(formData.nextAppointment),
+        //date: new Date("2024-01-12"),
+        date: formData.date,
+        symptoms: symptomsObject,
+        tests: testsObject,
+        diagnoses: diagnosesObject,
+        advices: advicesObject,
+        medicines: formattedArray
+      });
+    } else {
+      response = await axios.post("http://127.0.0.1:8000/patients/upload-prescription", {
+        // random: "random"
+        age: parseInt(formData.age),
+        weight: parseInt(formData.weight),
+        height: parseInt(formData.height),
+        address: formData.address,
+        bp_low: parseInt(bp_low),
+        bp_high: parseInt(bp_high),
+        treatment: treatmentID,
+        notes: formData.notes,
+        next_appointment: parseInt(formData.nextAppointment),
+        //date: new Date("2024-01-12"),
+        date: formData.date,
+        symptoms: symptomsObject,
+        tests: testsObject,
+        diagnoses: diagnosesObject,
+        advices: advicesObject,
+        medicines: formattedArray
+      });
+    }
+
     const data = response.data;
     console.log(data);
     navigate('/mytreatments');

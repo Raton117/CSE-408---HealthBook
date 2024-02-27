@@ -31,6 +31,11 @@ import RequestPatient from "./Pages/Doctor/RequestPatient";
 import PostPage from "./Pages/Doctor/Posts";
 import DoctorSignup from "./Pages/Doctor/DoctorSignup";
 
+
+import DoctorAddTreatment from "./Pages/Doctor/DoctorAddTreatment";
+import DocTreatments from "./Pages/Doctor/DoctorTreatments";
+import DocMyPrescriptions from "./Pages/Doctor/DoctorMyPrescriptions";
+
 import AllPosts from "./Pages/Forum/PostList";
 import PostDetail from "./Pages/Forum/PostDetails";
 import PostPageNew from "./Pages/Forum/PostPageNew";
@@ -156,6 +161,11 @@ const App = () => {
             <Route path="/prescriptionupload/:treatmentID" element={<ReportUpload />} />
             <Route path="/chat" element={<Chat />} />
             {/* <Route path="/createpost" element={<PostPage />} /> */}
+
+            <Route path="/doctorTreatments" element={<DocTreatments />} />
+            <Route path="/doctoraddtreatment" element={<DoctorAddTreatment />} />
+            <Route path="doctormyprescriptions/:treatmentID" element={<DocMyPrescriptions />} />
+
             <Route path="/createpost" element={<CreatePost />} />
             <Route path="/doctorsignup" element={<DoctorSignup />} />
             <Route path="/posts" element={<AllPosts />} />
