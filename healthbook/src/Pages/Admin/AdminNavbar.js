@@ -4,54 +4,52 @@ import { Link } from "react-router-dom";
 // You can replace 'YourLogo.png' with the actual path to your logo file
 import YourLogo from "../../Components/HBlogo.png"
 
-const DocNavbar = ({isAuthenticated,onLogout}) => {
-  
+const AdminNavbar = ({ isAuthenticated, onLogout }) => {
   // You can replace this with your actual authentication logic
-  console.log()
+  console.log();
   if (localStorage.getItem("isAuthenticated") === "true") {
     isAuthenticated = true;
   }
-  console.log("this is authentication "+isAuthenticated)
+  console.log("this is authentication " + isAuthenticated);
   const logout = () => {
     onLogout(); // Call the passed in logout function to update state in App.js
-     // Optionally redirect to the login page
+    // Optionally redirect to the login page
   };
   return (
-    <nav className="bg-white text-gray-500 shadow-lg top-0">
+    <nav className="bg-gray-900 text-white shadow-lg top-0">
       <div className="max-w-full px-4 flex justify-between items-center h-24">
         <div className="flex items-center">
           <Link to="/">
             <img src={YourLogo} alt="Healthbook Logo" className="h-28 mr-20" />
           </Link>
 
-          <Link to="/" className="hover:text-black mr-8 text-2xl">
+          <Link to="/" className="hover:text-red-500 mr-8 text-2xl">
             Home
           </Link>
-          <Link to="/allrecords" className="hover:text-black mr-8 text-2xl">
-            All Records
+          <Link to="/verifydoctor" className="hover:text-red-500 mr-8 text-2xl">
+            Verify Doctor
           </Link>
-          <Link to="/posts" className="hover:text-black mr-8 text-2xl">
-            Posts
+          <Link to="/currentMedication" className="hover:text-red-500 text-2xl">
+            Current Medication
           </Link>
-          <Link to="/currentTreatment" className="hover:text-black mr-8 text-2xl">
-            Current Treatment
-          </Link>
-          <Link to="/viewprescriptions" className="hover:text-black  text-2xl">
-            All Prescriptions
-          </Link>
+          <Link to ="/addtreatment" className="hover:text-red-500 text-2xl ml-8">Add Treatment</Link>
         </div>
 
         <div className="flex items-center space-x-4">
           {isAuthenticated ? (
             <div className="flex items-center space-x-4">
+             
               <Link
-                to="/doctorprofileview"
+                to="/profileviewpage"
                 className="bg-green-500 hover:bg-green-700 text-white p-3 rounded-full text-2xl font-poppins"
               >
                 Profile
               </Link>
-              <button className="hover:text-gray-300 text-2xl bg-red-400 p-3 rounded-full"> <Link to="/login" onClick={logout}>Logout</Link>
-                
+              <button className="hover:text-gray-300 text-2xl bg-red-400 p-3 rounded-full font-poppins">
+                {" "}
+                <Link to="/login" onClick={logout}>
+                  Logout
+                </Link>
               </button>
             </div>
           ) : (
@@ -76,4 +74,4 @@ const DocNavbar = ({isAuthenticated,onLogout}) => {
   );
 };
 
-export default DocNavbar;
+export default AdminNavbar;

@@ -27,7 +27,8 @@ const DoctorLoginPage = ({setIsAuthenticated}) => {
    
     if (data.responseCode == 200) {
       localStorage.setItem("username", username);
-      localStorage.setItem("userRole",'doctor' );
+      localStorage.setItem("userRole",'doctor');
+      localStorage.setItem("isAuthenticated", true);
       setIsAuthenticated(true)
       navigate("/");
     }

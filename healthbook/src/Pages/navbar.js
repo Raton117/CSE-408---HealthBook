@@ -6,8 +6,14 @@ import YourLogo from "../Components/HBlogo.png";
 
 const Navbar = ({ isAuthenticated, onLogout }) => {
   // You can replace this with your actual authentication logic
-  console.log();
+
+  if (localStorage.getItem("isAuthenticated") === "true") {
+    isAuthenticated = true;
+  }
   console.log("this is authentication " + isAuthenticated);
+  
+ 
+
   const logout = () => {
     onLogout(); // Call the passed in logout function to update state in App.js
     // Optionally redirect to the login page

@@ -15,24 +15,30 @@ const Treatment = () => {
           patient: localStorage.getItem('username')
         }
       })
-      .then(response => {
-        console.log(response);
-        setTreatments(response.data.treatment);
-      })
-      .catch(error => {
-        console.error('Error fetching treatments:', error);
-      });
+        .then(response => {
+          console.log(response);
+          setTreatments(response.data.treatment);
+        })
+        .catch(error => {
+          console.error('Error fetching treatments:', error);
+        });
     };
 
     fetchTreatments();
   }, []);
 
-  const filteredTreatments = treatments.filter(treatment => {
-    return treatment.id.toString().includes(searchTerm.toLowerCase()) ||
-           treatment.disease.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           treatment.doctor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           new Date(treatment.start_date).toLocaleDateString().includes(searchTerm);
-  });
+  let filteredTreatments;
+  if (!treatments) {
+    filteredTreatments = "No treatments found";
+    console.log(filteredTreatments)
+  } else {
+    filteredTreatments = treatments.filter(treatment => {
+      return treatment.id.toString().includes(searchTerm.toLowerCase()) ||
+        treatment.disease.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        treatment.doctor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        new Date(treatment.start_date).toLocaleDateString().includes(searchTerm);
+    });
+  }
 
   const handleShare = (treatmentId) => {
     // Logic to handle sharing treatment
@@ -55,26 +61,30 @@ const Treatment = () => {
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredTreatments.map((treatment) => (
-          <div key={treatment.id} className="border p-4 rounded shadow relative">
-            <Link key={treatment.id} to={`/myprescriptions/${treatment.id}`}>
-              <h3 className="text-lg font-semibold">Treatment ID: {treatment.id}</h3>
-              <p>Disease: {treatment.disease}</p>
-              <p>Doctor: {treatment.doctor_name}</p>
-              <p>Start Date: {new Date(treatment.start_date).toLocaleDateString()}</p>
-            </Link>
-            <div className="absolute right-4 bottom-4">
-              <button onClick={() => handleShare(treatment.id)} className="bg-blue-500 text-white rounded px-3 py-1 mr-2">
-                Share
-              </button>
-              <select onChange={(e) => handleChangeStatus(treatment.id, e.target.value)} defaultValue={treatment.status}>
-                <option value="ongoing">Ongoing</option>
-                <option value="completed">Completed</option>
-                <option value="cancelled">Cancelled</option>
-              </select>
+        {filteredTreatments === "No treatments found" | filteredTreatments.length === 0 ? (
+          <p>No treatments found</p>
+        ) : (
+          filteredTreatments.map((treatment) => (
+            <div key={treatment.id} className="border p-4 rounded shadow relative">
+              <Link key={treatment.id} to={`/myprescriptions/${treatment.id}`}>
+                <h3 className="text-lg font-semibold">Treatment ID: {treatment.id}</h3>
+                <p>Disease: {treatment.disease}</p>
+                <p>Doctor: {treatment.doctor_name}</p>
+                <p>Start Date: {new Date(treatment.start_date).toLocaleDateString()}</p>
+              </Link>
+              <div className="absolute right-4 bottom-4">
+                <button onClick={() => handleShare(treatment.id)} className="bg-blue-500 text-white rounded px-3 py-1 mr-2">
+                  Share
+                </button>
+                <select onChange={(e) => handleChangeStatus(treatment.id, e.target.value)} defaultValue={treatment.status}>
+                  <option value="ongoing">Ongoing</option>
+                  <option value="completed">Completed</option>
+                  <option value="cancelled">Cancelled</option>
+                </select>
+              </div>
             </div>
-          </div>
-        ))}
+          ))
+        )}
       </div>
       <Link to="/addtreatment" className="fixed right-4 bottom-4">
         <button className="bg-blue-500 text-white rounded-full p-4">

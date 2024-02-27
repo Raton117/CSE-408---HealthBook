@@ -19,7 +19,7 @@ import Prescription from "./Pages/Prescription";
 import Chat from "./Pages/Chats";
 import CurrentMedications from "./Pages/currentMedications";
 import MyTreatments from "./Pages/MyTreatments";
-
+import DoctorProfileNew from './Pages/Doctorprofilenew';
 //doctor's pages
 import DocNavbar from "./Pages/Doctor/Docnavbar";
 import DoctorLogin from "./Pages/Doctor/DoctorLogin";
@@ -37,22 +37,21 @@ import PostPageNew from "./Pages/Forum/PostPageNew";
 import CreatePost from "./Pages/Forum/CreatePost";
 import AddTreatment from "./Pages/AddTreatment";
 
+//admin
+import AdminLogin from "./Pages/Admin/AdminLogin";
+import AdminNavbar from "./Pages/Admin/AdminNavbar";
+import AdminSidebar from "./Pages/Admin/AdminSidebar";
+import VerifyDoctor from "./Pages/Admin/Doctor/VerifyDoctor";
+
 const App = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check if the username exists in localStorage
-    const isLoggedIn = localStorage.getItem("username") !== null;
-    const userRole = getUserRole();
-
-    setIsAuthenticated(isLoggedIn);
-
-    if (!isLoggedIn) {
-      if (userRole === "doctor") {
-        navigate("/doctorlogin");
-      } else {
+    if (!localStorage.getItem("username")) {
+      if(window.location.pathname != '/adminlogin') {
+        alert("You are not Logged In");
         navigate("/login");
       }
     }
@@ -73,7 +72,12 @@ const App = () => {
             onLogout={handleLogout}
           />
         );
-
+      
+        case "admin":
+          return (
+            <AdminNavbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
+          );
+      
       default:
         return (
           <Navbar isAuthenticated={isAuthenticated} onLogout={handleLogout} />
@@ -87,7 +91,9 @@ const App = () => {
     switch (userRole) {
       case "doctor":
         return <DoctorSidebar />;
-
+      case "admin":
+        return <AdminSidebar />;
+      
       default:
         return <Sidebar />;
     }
@@ -97,6 +103,7 @@ const App = () => {
     setIsAuthenticated(false);
     localStorage.removeItem("username");
     localStorage.removeItem("userRole"); // Example of clearing user data
+    localStorage.removeItem("isAuthenticated");
   };
   return (
     <>
@@ -122,7 +129,7 @@ const App = () => {
 
             <Route path="/MyDoctors" element={<MyDoctors />} />
             <Route path="/FindDoctor" element={<FindDoctor />} />
-            <Route path="/doctorprofile" element={<DoctorProfile />} />
+            <Route path="/doctor/:username" element={<DoctorProfileNew />} />
             <Route path="/signup" element={<Signup />} />
             <Route
               path="/PrescriptionRequest"
@@ -157,6 +164,10 @@ const App = () => {
             <Route path="/mytreatments" element={<MyTreatments/>} />
             {/* <Route path="/postsnew" element={<PostPageNew />} /> */}
            
+            {/* admin routes */}
+            <Route path="/adminlogin" element={<AdminLogin setIsAuthenticated={setIsAuthenticated}/>} />
+            <Route path="/verifydoctor" element={<VerifyDoctor />} />
+            {/* } /> */}
             
     
           </Routes>

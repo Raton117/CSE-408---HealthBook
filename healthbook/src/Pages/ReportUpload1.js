@@ -3,12 +3,16 @@ import { FaTimes } from 'react-icons/fa';
 import axios from 'axios';
 import medicineSuggestions from './medicines'; // Importing suggestions from the other file
 import form from './Doctor/form';
-import { Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
+// import { useHistory } from 'react-router-dom';
 
 
 
 const PrescriptionUpload = () => {
+  const navigate = useNavigate();
   const [step, setStep] = useState(1); // Start from step 1
+
+  // const history = useHistory();
 
   // Form state
   const [formData, setFormData] = useState({
@@ -23,7 +27,7 @@ const PrescriptionUpload = () => {
     // Add more fields as needed
   });
 
-  const treatmentID = useParams();
+  const treatmentID = parseInt(useParams()['treatmentID']);
 
   const [symptoms, setSymptoms] = useState([]);
   const [currentSymptom, setCurrentSymptom] = useState('');
@@ -157,7 +161,7 @@ const PrescriptionUpload = () => {
 
   const handleUpload = async (e) => {
     console.log('In handle Upload');
-    //e.preventDefault();
+    e.preventDefault();
     const symptomsObject = symptoms.map(symptom => ({
       symptom: symptom
     }));
@@ -205,7 +209,7 @@ const PrescriptionUpload = () => {
     });
     const data = response.data;
     console.log(data);
-    Navigate('/mytreatments');
+    navigate('/mytreatments');
   }
   // Handle form field changes
   const handleChange = (e) => {

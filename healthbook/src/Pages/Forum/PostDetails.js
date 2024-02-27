@@ -7,6 +7,8 @@ const PostDetail = () => {
   const [post, setPost] = useState(null);
   const { id } = useParams();
   const [comment, setComment] = useState('');
+  const [editingCommentId, setEditingCommentId] = useState(null);
+  const [editingContent, setEditingContent] = useState('');
   
   const navigate = useNavigate();
 
@@ -129,15 +131,39 @@ const PostDetail = () => {
 
   }
 
-  const handleEdit = async (comment,id) => {
-    try {
-      if(localStorage.getItem('username') === post.comments[id].author){
-           
-      }
-    } catch (error) {
-      console.error('Error editing comment:', error);
+  const handleEdit = ( currentContent,commentId) => {
+    console.log(currentContent);
+    console.log(commentId);
+    
+    if(localStorage.getItem('username') === post.comments[id].author)
+    {
+      setEditingCommentId(commentId);
+      setEditingContent(currentContent);
     }
-  }
+   
+  };
+
+ 
+
+  const handleCancelEdit = () => {
+    setEditingCommentId(null);
+    setEditingContent('');
+  };
+
+  const handleSaveEdit = async () => {
+    try {
+      // Assuming the backend expects the comment ID and the new content
+      const response = await axios.patch('http://localhost:8000/forum/edit-comment', {
+        comment_id: editingCommentId,
+        content: editingContent,
+      });
+      console.log(response.data);
+      fetchPostData(); // Refresh the post data to show the updated comment
+      handleCancelEdit(); // Reset the editing state
+    } catch (error) {
+      console.error('Error saving comment:', error);
+    }
+  };
 
   const handleDeleteComment = async (comment, id) => {
     console.log(comment);
@@ -221,6 +247,22 @@ const PostDetail = () => {
   <div>
       {post.comments.map((comment) => (
         <div key={comment.id} className="border-t border-gray-200 mt-4 pt-4">
+
+{editingCommentId === comment.id ? (
+              // If this comment is being edited, show an input and Save/Cancel buttons
+              <>
+                <input
+                  type="text"
+                  value={editingContent}
+                  onChange={(e) => setEditingContent(e.target.value)}
+                  className="w-full p-2 border border-gray-300 rounded mb-2"
+                />
+                <button onClick={handleSaveEdit} className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600 mr-2">Save</button>
+                <button onClick={handleCancelEdit} className="px-4 py-2 bg-gray-500 text-white rounded hover:bg-gray-600">Cancel</button>
+              </>
+            ) : (
+              <>
+              
           <p className="text-md mb-1">{comment.author} : {comment.content}</p>
           
           <div className="flex gap-4 items-center mb-4">
@@ -256,6 +298,8 @@ const PostDetail = () => {
               
             </button>
           </div>
+          </>
+            )}
         </div>
       ))}
     </div>

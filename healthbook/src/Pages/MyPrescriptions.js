@@ -17,24 +17,29 @@ const MyPrescriptions = () => {
           treatment: treatmentID
         }
       })
-      .then(response => {
-        console.log(response);
-        setPrescriptions(response.data.prescriptions || []);
-      })
-      .catch(error => {
-        console.error('Error fetching prescriptions:', error);
-      });
+        .then(response => {
+          console.log(response);
+          setPrescriptions(response.data.prescriptions);
+        })
+        .catch(error => {
+          console.error('Error fetching prescriptions:', error);
+        });
     };
 
     fetchPrescriptions();
   }, [treatmentID]);
 
-  const filteredPrescriptions = prescriptions.filter(prescription => {
-    return prescription.id.toString().includes(searchTerm.toLowerCase()) ||
-           prescription.diagnoses.some(d => d.disease.toLowerCase().includes(searchTerm.toLowerCase())) ||
-           prescription.doctor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-           new Date(prescription.date).toLocaleDateString().includes(searchTerm);
-  });
+  let filteredPrescriptions;
+  if (prescriptions) {
+    filteredPrescriptions = prescriptions.filter(prescription => {
+      return prescription.id.toString().includes(searchTerm.toLowerCase()) ||
+        prescription.diagnoses.some(d => d.disease.toLowerCase().includes(searchTerm.toLowerCase())) ||
+        prescription.doctor_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        new Date(prescription.date).toLocaleDateString().includes(searchTerm);
+    });
+  } else {
+    filteredPrescriptions = "No prescriptions found";
+  }
 
   return (
     <div className="container mx-auto p-4 relative">
@@ -47,25 +52,29 @@ const MyPrescriptions = () => {
         />
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {filteredPrescriptions.map((prescription) => (
-          <Link key={prescription.id} to={`/prescription/${prescription.id}`} className="border p-4 rounded shadow" >
-            {/* Display prescription details */}
-            <h3 className="text-lg font-semibold">Prescription ID: {prescription.id}</h3>
-            <p>Disease: {prescription.diagnoses.map(d => d.disease).join(', ')}</p>
-            <p>Doctor: {prescription.doctor_name}</p>
-            <p>Date: {new Date(prescription.date).toLocaleDateString()}</p>
-          </Link>
-        ))}
+        {filteredPrescriptions === "No prescriptions found" ? (
+          <p>No prescriptions found</p>
+        ) : (
+          filteredPrescriptions.map((prescription) => (
+            <Link key={prescription.id} to={`/prescription/${prescription.id}`} className="border p-4 rounded shadow">
+              {/* Display prescription details */}
+              <h3 className="text-lg font-semibold">Prescription ID: {prescription.id}</h3>
+              <p>Disease: {prescription.diagnoses.map(d => d.disease).join(', ')}</p>
+              <p>Doctor: {prescription.doctor_name}</p>
+              <p>Date: {new Date(prescription.date).toLocaleDateString()}</p>
+            </Link>
+          ))
+        )}
       </div>
-      <Link
-        key={treatmentID} 
-        to={`/prescriptionupload/${treatmentID}`}
-
-        
-        className="bg-blue-500 text-white py-2 px-4 rounded-md absolute bottom-4 right-4"
-      >
-        Add Prescription
-      </Link>
+      <div className="absolute bottom-4 right-4">
+        <Link
+          key={treatmentID}
+          to={`/prescriptionupload/${treatmentID}`}
+          className="bg-blue-500 text-white py-2 px-4 rounded-md"
+        >
+          Add Prescription
+        </Link>
+      </div>
     </div>
   );
 };
